@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { IconButton, Button } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -8,6 +8,7 @@ import { acceptDeclineSubmission } from '../../ReduxToolkit/submissionSlice';
 
 function SubmissionCard({ submission, onStatusChange }) {
   const dispatch = useDispatch();
+  const { users } = useSelector(state => state.auth);
 
   const handleAccepted = () => {
     dispatch(acceptDeclineSubmission({ id: submission.id, status: 'ACCEPTED' })).then((result) => {
@@ -25,10 +26,22 @@ function SubmissionCard({ submission, onStatusChange }) {
     });
   };
 
+  // Find the user who made the submission
+  const getUserById = (userId) => {
+    return users.find(user => user.id === userId);
+  };
+
+  const user = getUserById(submission.userId);
+  const userName = user ? `${user.fullName}` : 'Unknown User';
+
   return (
     <div className="rounded-md bg-black p-5 flex items-center justify-between space-y-2">
-      {/* GitHub Link section */}
-      <div className="flex items-center gap-2">
+      {/* User and GitHub Link section */}
+      <div className="flex items-center gap-4">
+        <div className="text-sm">
+          <span className="text-gray-400">Submitted by: </span>
+          <span className="text-white font-medium">{userName}</span>
+        </div>
         <a href={submission.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
           <span className="text-[#c24dd0]">Go to Link</span>
           <OpenInNewIcon />
