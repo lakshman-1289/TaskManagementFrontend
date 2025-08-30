@@ -1,0 +1,27 @@
+.navbar-container {
+  position: fixed;            /* Stick to the top */
+  top: 0;
+  left: 0;
+  width: 100%;                /* Full width */
+  z-index: 1000;              /* Ensure it stays above sidebar & content */
+
+  background-image: linear-gradient(15deg, #c24dd0, #7a72fa);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  height: 5rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 2rem; 
+}
+
+/* Text inside navbar */
+.navbar-container p {
+  color: #fff;
+}
+
+/* Avatar */
+.navbar-container .MuiAvatar-root {
+  border: 2px solid #fff;
+}

@@ -1,0 +1,17 @@
+/* Layout refinements */
+.right-side-part {
+  padding-top: 2rem;
+}
+
+.home-container {
+  width: 100%;
+  min-height: calc(100vh - 70px); /* adjust depending on Navbar height */
+  display: flex;
+}
+
+
+@media (min-width: 1024px) {
+  .right-side-part {
+    margin-left: 1.5rem;
+  }
+}

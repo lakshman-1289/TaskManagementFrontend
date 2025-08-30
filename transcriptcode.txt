@@ -1,0 +1,3235 @@
+Here is the complete source code extracted from the transcript, preserving its original formatting and order as much as possible, including all mentioned lines, imports, and partial snippets.
+# Terminal Commands
+npx create react app . [1]
+npx create react app # Retry [2]
+npm install @mui/material @emotion/react @emotion/styled # Assumed Material UI installation command [3]
+npm install -D tailwindcss postcss autoprefixer # Assumed Tailwind CSS installation command [4]
+npx tailwindcss init -p # Assumed Tailwind CSS init command [4]
+npm i react-router-dom # Install React Router DOM [5]
+npm start # Start the React project [6]
+npm install @mui/icons-material # Install Material UI Icons [7]
+npm install @mui/x-date-pickers # Install MUI X Date Pickers [8]
+npm install dayjs # Install Day.js for date picking [8]
+
+--------------------------------------------------------------------------------
+/* src/index.css (Global Styles) */
+
+/* Initial background attempt (moved from app.js context) */
+body {
+    background: linear-gradient(135deg, #1a0b1n, #150D2D, #162134) !important; /* Typo #1a0b1n copied verbatim */
+    overflow-x: hidden !important; [9]
+    width: 100vw !important; [9]
+}
+
+/* Tailwind CSS directives */
+@tailwind base; [10]
+@tailwind components; [10]
+@tailwind utilities; [10]
+
+/* Card class (moved from sidebar.css for global access) */
+.card {
+    background-color: #0C071B; [11]
+    box-shadow: rgba(255, 0, 50, 0.7) 0px 0px 20px; [11]
+    padding: 1rem; [11]
+    border-radius: 5px; [11]
+}
+
+/* Custom Button class (moved from sidebar.css for global access) */
+.custom-button {
+    color: white; [12]
+    padding: 0.5rem; /* Implied from reduction comments */ [13]
+    border: none; /* Implied from border removal */ [13]
+    outline: none; /* Explicitly mentioned */ [14]
+}
+
+/* Tech Stack class */
+.text-tech-stack {
+    color: #c24dd0; [15]
+    border: 2px solid #c24dd0; [15]
+    padding: 0.25rem 1.25rem; /* Interpretation of py1 px5, and 0.5m/2rem for padding */ [15]
+    border-radius: 9999px; /* Interpretation of rounded-full */ [15]
+}
+--------------------------------------------------------------------------------
+// tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+--------------------------------------------------------------------------------
+// src/App.js
+import React from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles'; [16, 17]
+import Navbar from './pages/Navbar/Navbar'; // Implied path based on folder structure [18]
+import Home from './pages/Home/Home'; // Implied path based on folder structure [19]
+import Auth from './pages/Auth/Auth'; // Implied path based on folder structure [20]
+
+// Dark theme definition
+export const DarkTheme = createTheme({ [17]
+    palette: {
+        mode: 'dark', [16]
+        background: {
+            default: '#0C071B', [16]
+        },
+        text: {
+            primary: 'white', [16]
+        },
+        primary: {
+            main: '#215106', [16]
+            light: 'rgba(255, 0, 50, 0.7)', [17]
+        }
+    }
+});
+
+function App() {
+    return (
+        <ThemeProvider theme={DarkTheme}> [17]
+            {/* Initial app background color fix attempt, then removed for theme approach */}
+            {/* <div style={{ backgroundColor: '#0C071B', color: 'white !important' }}> */} [16, 21]
+
+            {/* Content for the app */}
+            <Navbar /> [18]
+            <Home /> [19]
+            {/* <Auth /> */} {/* Auth component, initially commented out for development, later enabled */} [20]
+
+            {/* </div> */}
+        </ThemeProvider>
+    );
+}
+
+export default App;
+--------------------------------------------------------------------------------
+// src/pages/Navbar/Navbar.jsx
+import React from 'react';
+import Avatar from '@mui/material/Avatar'; // Implied import [22]
+import './Navbar.css'; // Import Navbar specific CSS [18]
+
+function Navbar() { // RFC snippet [9]
+  return (
+    <div className="navbar-container z-10 sticky left-0 right-0 top-0 py-3 px-5 lg:px-10 flex justify-between items-center"> [22]
+        <p className="font-bold text-lg">J Task Manager</p> [22]
+        <div className="flex items-center gap-5"> [22]
+            Code With J [22]
+            <Avatar src="copied_image_address" sx={{ backgroundColor: 'some_color' }} /> {/* Avatar with src and background color styling [18, 23] */}
+        </div>
+    </div>
+  );
+}
+
+export default Navbar;
+--------------------------------------------------------------------------------
+/* src/pages/Navbar/Navbar.css */
+.navbar-container {
+    background-image: linear-gradient(15deg, #c24dd0, #7a72fa); [18]
+}
+--------------------------------------------------------------------------------
+// src/pages/Home/Home.jsx
+import React from 'react';
+import Sidebar from '../Sidebar/Sidebar'; // Implied path [19]
+import TaskList from '../TaskList/TaskList'; // Implied path [24]
+import '../Home/Home.css'; // Assumed CSS file for Home, though not explicitly mentioned.
+
+function Home() { // RFC snippet [19]
+  return (
+    <div className="lg:flex px-5 lg:px-20 pt-[2.9vh]"> [19]
+        {/* Sidebar container with conditional display */}
+        <div className="hidden lg:block w-[25vw] relative"> [25]
+            <Sidebar />
+        </div>
+        {/* Right side part for tasks */}
+        <div className="right-side-part w-full flex flex-col items-center justify-center mb-10"> [19, 26]
+            <TaskList /> [24]
+        </div>
+    </div>
+  );
+}
+
+export default Home;
+--------------------------------------------------------------------------------
+// src/pages/Sidebar/Sidebar.jsx
+import React, { useState } from 'react'; [27]
+import Avatar from '@mui/material/Avatar'; // Implied import [28]
+import Button from '@mui/material/Button'; // Implied import [29]
+import CreateTaskForm from '../CreateTaskForm/CreateTaskForm'; // Implied path [30]
+import './Sidebar.css'; // Import Sidebar specific CSS [11]
+import '../../index.css'; // Import global CSS for .custom-button, .card etc. [11]
+
+function Sidebar() { // RFC snippet [23]
+    const [activeMenu, setActiveMenu] = useState('home'); [27]
+    const role = 'role_admin'; // Hardcoded role [31]
+    const [openCreateTaskForm, setOpenCreateTaskForm] = useState(false); [30]
+
+    const menu = [ [32]
+        { name: 'Home', value: 'home', role: ['admin', 'customer'] }, [32]
+        { name: 'Done', value: 'done', role: ['admin', 'customer'] }, [33]
+        { name: 'Assigned', value: 'assigned', role: ['admin'] }, [33]
+        { name: 'Not Assigned', value: 'not assigned', role: ['admin'] }, [33]
+        { name: 'Create New Task', value: 'create new task', role: ['admin'] }, [33]
+        { name: 'Notification', value: 'notification', role: ['customer'] }, [33]
+    ];
+
+    const handleMenuChange = (item) => { [34]
+        setActiveMenu(item.name); [34]
+        if (item.name === 'Create New Task') { [30]
+            setOpenCreateTaskForm(true); [35]
+        }
+    };
+
+    const handleLogout = () => { [36]
+        console.log('handle logout'); [36]
+    };
+
+    return (
+        <React.Fragment> {/* Used fragment to wrap modal and main content */} [30]
+            <div className="min-h-[85vh] flex flex-col justify-center fixed w-[20vw] space-y-5 card"> {/* Card class applied here */} [11, 23]
+                <Avatar
+                    src="copied_image_address" [28]
+                    sx={{ width: '8rem', height: '8rem' }} [28]
+                    className="border-2 border-[#c24dd0]" [25]
+                />
+                {menu.filter(item => item.role.includes(role)).map((item) => ( [31]
+                    <p
+                        key={item.value}
+                        className={`py-3 px-5 rounded-full text-center cursor-pointer ${activeMenu === item.name ? 'active-menu-item' : 'menu-item'}`} [27]
+                        onClick={() => handleMenuChange(item)} [34]
+                    >
+                        {item.name}
+                    </p>
+                ))}
+                <Button
+                    className="logout-button w-full rounded-full py-[0.7rem] rounded-[2rem]" [36]
+                    onClick={handleLogout} [36]
+                >
+                    Logout
+                </Button>
+            </div>
+
+            {/* Create Task Form Modal */}
+            <CreateTaskForm
+                open={openCreateTaskForm} [35]
+                handleClose={() => setOpenCreateTaskForm(false)} [35, 37]
+            />
+        </React.Fragment>
+    );
+}
+
+export default Sidebar;
+--------------------------------------------------------------------------------
+/* src/pages/Sidebar/Sidebar.css */
+/* Menu item styles */
+.menu-item {
+    border: 2px solid #c24dd0; [38]
+}
+
+.active-menu-item {
+    background-image: linear-gradient(15deg, #c24dd0, #7a72fa); [38]
+    color: white; [38]
+}
+
+/* Logout button specific styles */
+.logout-button {
+    color: white !important; [12]
+    background-image: linear-gradient(15deg, #ff05dd, #7a72fa); /* Corrected second color */ [12]
+}
+--------------------------------------------------------------------------------
+// src/pages/TaskList/TaskList.jsx
+import React from 'react';
+import TaskCard from '../TaskCard/TaskCard'; // Implied path [26]
+
+function TaskList() { // RFC snippet [26]
+  // Dummy data for tasks (replace with actual data later)
+  const dummyTasks = [
+    { id: 1, title: 'Car Rental Website', description: 'Use latest Frameworks and Technology to make this website', image: 'car_rental_image_address', tags: ['Angular', 'React'] },
+    { id: 2, title: 'Another Task', description: 'Description for another task', image: 'another_image_address', tags: ['Node.js', 'Python'] },
+  ];
+
+  return (
+    <div className="space-y-5 w-[67vw]"> {/* Width given here */} [26]
+        {dummyTasks.map((task) => ( // Mapping over dummy tasks
+            <div key={task.id} className="space-y-3"> {/* space-y-3 between task cards */} [24]
+                <TaskCard task={task} /> {/* Pass task data to TaskCard */}
+            </div>
+        ))}
+    </div>
+  );
+}
+
+export default TaskList;
+--------------------------------------------------------------------------------
+// src/pages/TaskCard/TaskCard.jsx
+import React, { useState } from 'react'; [39]
+import IconButton from '@mui/material/IconButton'; [40]
+import Menu from '@mui/material/Menu'; [39]
+import MenuItem from '@mui/material/MenuItem'; [39]
+import MoreVertIcon from '@mui/icons-material/MoreVert'; [40]
+import UserList from '../UserLists/UserList'; // Implied path [41]
+import SubmissionList from '../SubmissionList/SubmissionList'; // Implied path [42]
+import EditTaskForm from '../EditTaskForm/EditTaskForm'; // Implied path [43]
+import '../../index.css'; // Import global CSS for .card [44]
+
+function TaskCard({ task }) { // RFC snippet [44]
+    const [anchorEl, setAnchorEl] = useState(null); [39]
+    const openMenu = Boolean(anchorEl); [39]
+    const role = 'role_admin'; // Hardcoded role [45]
+
+    // States for Modals
+    const [openUserList, setOpenUserList] = useState(false); [46]
+    const [openSubmissionList, setOpenSubmissionList] = useState(false); [47]
+    const [openUpdateTaskForm, setOpenUpdateTaskForm] = useState(false); [48]
+
+    const handleMenuClick = (event) => { [39]
+        setAnchorEl(event.currentTarget); [39]
+    };
+
+    const handleMenuClose = () => { [39]
+        setAnchorEl(null); [39]
+    };
+
+    const handleOpenUserList = () => { [49]
+        setOpenUserList(true); [41]
+        handleMenuClose(); [41]
+    };
+
+    const handleCloseUserList = () => { [41]
+        setOpenUserList(false); [41]
+    };
+
+    const handleOpenSubmissionList = () => { [49]
+        setOpenSubmissionList(true); [42]
+        handleMenuClose(); [42]
+    };
+
+    const handleCloseSubmissionList = () => { [42]
+        setOpenSubmissionList(false); [42]
+    };
+
+    const handleOpenUpdateTaskModel = () => { [49]
+        setOpenUpdateTaskForm(true); [48]
+        handleMenuClose(); [48]
+    };
+
+    const handleCloseUpdateTaskForm = () => { [48]
+        setOpenUpdateTaskForm(false); [43]
+    };
+
+    const handleDeleteTask = () => { [49]
+        handleMenuClose(); [43]
+        // Logic to delete task
+        console.log('Delete Task');
+    };
+
+    return (
+        <div className="card lg:flex justify-between"> [44]
+            <div className="lg:flex gap-5 items-center space-y-2 w-[90%] lg:w-[70%]"> [44, 50]
+                {/* Image section */}
+                <div className="image">
+                    <img
+                        src="car_rental_image_address" // Example image source [50]
+                        alt="Task Image"
+                        className="object-cover"
+                        style={{ width: '7rem', height: '7rem' }} /* Explicit width/height from transcript */ [24]
+                    />
+                </div>
+                {/* Text content */}
+                <div className="space-y-2"> [50]
+                    <h1 className="font-bold text-lg">Car Rental Website</h1> [50]
+                    <p className="text-gray-500 text-sm">Use latest Frameworks and Technology to make this website</p> [50, 51]
+                    {/* Tags section */}
+                    <div className="flex flex-wrap gap-2 items-center"> [51]
+                        {task.tags && task.tags.map((tag) => (
+                            <span key={tag} className="py-1 px-5 rounded-full text-tech-stack"> {/* text-tech-stack class */} [51]
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            {/* Action buttons/icons */}
+            <div>
+                <IconButton
+                    aria-controls={openMenu ? 'basic-menu' : undefined} [39]
+                    aria-haspopup="true" [39]
+                    aria-expanded={openMenu ? 'true' : undefined} [39]
+                    onClick={handleMenuClick} [39]
+                >
+                    <MoreVertIcon /> [40]
+                </IconButton>
+                <Menu
+                    id="basic-menu" [39]
+                    anchorEl={anchorEl} [39]
+                    open={openMenu} [39]
+                    onClose={handleMenuClose} [39]
+                    MenuListProps={{
+                        'aria-labelledby': 'basic-button', [39]
+                    }}
+                >
+                    {role === 'role_admin' ? ( [45]
+                        <>
+                            <MenuItem onClick={handleOpenUserList}>Assigned User</MenuItem> [45]
+                            <MenuItem onClick={handleOpenSubmissionList}>See Submission</MenuItem> [45]
+                            <MenuItem onClick={handleOpenUpdateTaskModel}>Edit</MenuItem> [45]
+                            <MenuItem onClick={handleDeleteTask}>Delete</MenuItem> [45]
+                        </>
+                    ) : (
+                        // Placeholder for non-admin options if applicable
+                        <MenuItem onClick={handleDeleteTask}>Delete</MenuItem>
+                    )}
+                </Menu>
+            </div>
+
+            {/* Modals */}
+            <UserList
+                open={openUserList} [41]
+                handleClose={handleCloseUserList} [41]
+            />
+            <SubmissionList
+                open={openSubmissionList} [42]
+                handleClose={handleCloseSubmissionList} [42]
+            />
+            <EditTaskForm
+                open={openUpdateTaskForm} [43]
+                handleClose={handleCloseUpdateTaskForm} [43]
+                // Pass task data for pre-filling here once integrated with API
+            />
+        </div>
+    );
+}
+
+export default TaskCard;
+--------------------------------------------------------------------------------
+// src/pages/UserLists/UserList.jsx
+import React from 'react';
+import Modal from '@mui/material/Modal'; [46]
+import Box from '@mui/material/Box'; [46]
+import Typography from '@mui/material/Typography'; // Assumed for modal title [46]
+import ListItem from '@mui/material/ListItem'; [52]
+import ListItemAvatar from '@mui/material/ListItemAvatar'; [52]
+import Avatar from '@mui/material/Avatar'; [52]
+import ListItemText from '@mui/material/ListItemText'; [52]
+import Button from '@mui/material/Button'; [52]
+import Divider from '@mui/material/Divider'; [14]
+import '../../index.css'; // Import for .custom-button [13]
+
+const style = { // Common style for MUI Modal Box [46]
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 500, // Adjusted width for better visibility [53]
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
+
+function UserList({ open, handleClose }) { // RFC snippet [46]
+    // Dummy user data
+    const dummyUsers = [ [52]
+        { id: 1, name: 'Code With J', secondary: 'Frontend Developer', image: 'user_image_1_address' },
+        { id: 2, name: 'Another User', secondary: 'Backend Developer', image: 'user_image_2_address' },
+        { id: 3, name: 'Third User', secondary: 'Fullstack Developer', image: 'user_image_3_address' },
+        { id: 4, name: 'Fourth User', secondary: 'DevOps Engineer', image: 'user_image_4_address' },
+    ];
+
+    return (
+        <Modal
+            open={open} [46]
+            onClose={handleClose} [46]
+            aria-labelledby="modal-modal-title" [46]
+            aria-describedby="modal-modal-description" [46]
+        >
+            <Box sx={style}> [46]
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                    User List
+                </Typography>
+                <div className="flex flex-col space-y-2 py-2"> {/* space-y-2 for items, py-2 for reduced padding */} [13, 52]
+                    {dummyUsers.map((user, index) => ( [52]
+                        <React.Fragment key={user.id}>
+                            <div className="flex items-center justify-between w-full"> [52]
+                                <ListItem>
+                                    <ListItemAvatar> [52]
+                                        <Avatar src={user.image} /> [52]
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        primary={user.name} [52]
+                                        secondary={user.secondary} [52]
+                                    />
+                                </ListItem>
+                                <Button className="custom-button">Select</Button> [13]
+                            </div>
+                            {/* Conditional Divider */}
+                            {index !== dummyUsers.length - 1 && <Divider variant="inset" component="li" />} [14, 54]
+                        </React.Fragment>
+                    ))}
+                </div>
+            </Box>
+        </Modal>
+    );
+}
+
+export default UserList;
+--------------------------------------------------------------------------------
+// src/pages/SubmissionList/SubmissionList.jsx
+import React from 'react';
+import Modal from '@mui/material/Modal'; [46]
+import Box from '@mui/material/Box'; [46]
+import Typography from '@mui/material/Typography'; // Assumed for modal title [46]
+import SubmissionCard from './SubmissionCard'; // Implied path [55]
+
+const style = { // Common style for MUI Modal Box, same as UserList [46]
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 500, // Adjusted width for better visibility [53]
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
+
+function SubmissionList({ open, handleClose }) { // RFC snippet [47]
+    // Dummy submission data
+    const submissions = [ // Example data [56, 57]
+        { id: 1, githubLink: 'github.com/proj1', time: '2024-03-01 10:00 AM', status: 'accepted' },
+        { id: 2, githubLink: 'github.com/proj2', time: '2024-02-28 02:30 PM', status: 'pending' },
+    ];
+
+    return (
+        <Modal
+            open={open} [46]
+            onClose={handleClose} [46]
+            aria-labelledby="modal-modal-title" [46]
+            aria-describedby="modal-modal-description" [46]
+        >
+            <Box sx={style}> [46]
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                    Submission List
+                </Typography>
+                <div className="space-y-2"> [58]
+                    {submissions.length > 0 ? ( [56]
+                        <div className="space-y-3"> {/* space-y-3 between cards */} [57]
+                            {submissions.map((submission) => ( [57]
+                                <SubmissionCard key={submission.id} submission={submission} />
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-center">No submission found</p> [56]
+                    )}
+                </div>
+            </Box>
+        </Modal>
+    );
+}
+
+export default SubmissionList;
+--------------------------------------------------------------------------------
+// src/pages/SubmissionList/SubmissionCard.jsx
+import React from 'react';
+import IconButton from '@mui/material/IconButton'; // Implied import [59]
+import Button from '@mui/material/Button'; // Implied import [53]
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'; [60]
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'; [59]
+import CancelIcon from '@mui/icons-material/Cancel'; [59]
+
+function SubmissionCard({ submission }) { // RFC snippet [55]
+    const handleAccepted = () => { [59]
+        console.log('Accepted');
+    };
+
+    const handleDeclined = () => { [59]
+        console.log('Declined');
+    };
+
+    return (
+        <div className="rounded-md bg-black p-5 flex items-center justify-between space-y-2"> [55]
+            {/* GitHub Link section */}
+            <div className="flex items-center gap-2"> [55]
+                <a href={submission.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2"> [60]
+                    <span className="text-[#c24dd0]">Go to Link</span> [60]
+                    <OpenInNewIcon /> [60]
+                </a>
+            </div>
+            {/* Submission Time section */}
+            <div className="flex items-center gap-2 text-xs"> [60]
+                <p className="text-gray-400">Submission Time</p> [61]
+                <p>{submission.time}</p> [61]
+            </div>
+            {/* Status / Action buttons */}
+            {submission.status === 'accepted' ? ( [53]
+                <div className="flex gap-5"> [53]
+                    <div className="text-green-500"> [59]
+                        <IconButton onClick={handleAccepted}> [59]
+                            <CheckCircleIcon /> [59]
+                        </IconButton>
+                        Accepted
+                    </div>
+                    <div className="text-red-500"> [59]
+                        <IconButton onClick={handleDeclined}> [59]
+                            <CancelIcon /> [59]
+                        </IconButton>
+                        Declined
+                    </div>
+                </div>
+            ) : (
+                <Button variant="outlined" color="error"> {/* Changed from success/error based on example */} [53]
+                    Accept
+                </Button>
+                // Add another button for Decline if needed for pending state
+            )}
+        </div>
+    );
+}
+
+export default SubmissionCard;
+--------------------------------------------------------------------------------
+// src/pages/CreateTaskForm/CreateTaskForm.jsx
+import React, { useState } from 'react'; [62]
+import Modal from '@mui/material/Modal'; [46]
+import Box from '@mui/material/Box'; [46]
+import Typography from '@mui/material/Typography'; // Assumed for modal title [46]
+import Grid from '@mui/material/Grid'; [37]
+import TextField from '@mui/material/TextField'; [62]
+import Autocomplete from '@mui/material/Autocomplete'; [63]
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'; [64]
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'; [8]
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'; [65]
+import Button from '@mui/material/Button'; [66]
+import '../../index.css'; // Import for .custom-button [67]
+
+
+const style = { // Common style for MUI Modal Box, same as UserList [46]
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 500, // Adjusted width for better visibility [53]
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
+
+function CreateTaskForm({ open, handleClose }) { // RFC snippet [68]
+    const [formData, setFormData] = useState({ [62]
+        title: '', [69]
+        image: '', [69]
+        description: '', [69]
+        tags: [], [69]
+        deadline: new Date(), [69]
+    });
+    const [selectedTags, setSelectedTags] = useState([]); [70]
+
+    const tags = [ [71]
+        'Angular',
+        'React',
+        'Vue.js',
+        'Spring Boot',
+        'Node.js',
+        'Python',
+    ];
+
+    const handleChange = (e) => { [69]
+        const { name, value } = e.target; [70]
+        setFormData({ ...formData, [name]: value }); [70]
+    };
+
+    const handleTagChange = (event, value) => { [70]
+        setSelectedTags(value); [70]
+    };
+
+    const handleDeadlineChange = (date) => { [67]
+        setFormData({ ...formData, deadline: date }); [67]
+    };
+
+    const formatDate = (date) => { [72]
+        const year = date.getFullYear(); [72, 73]
+        const month = String(date.getMonth() + 1).padStart(2, '0'); [72, 73]
+        const day = String(date.getDate()).padStart(2, '0'); [72, 73]
+        const hours = String(date.getHours()).padStart(2, '0'); [72, 73]
+        const minutes = String(date.getMinutes()).padStart(2, '0'); [72, 73]
+        const seconds = String(date.getSeconds()).padStart(2, '0'); [72, 73]
+        const milliseconds = String(date.getMilliseconds()).padStart(3, '0'); [72, 73]
+
+        // Example format "2024-02-29T12:00:00.000Z"
+        const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`; [73]
+        return formattedDate; [74]
+    };
+
+    const handleSubmit = (e) => { [75]
+        e.preventDefault(); [75]
+
+        // Format deadline and set tags before logging/sending
+        const formattedDeadline = formatDate(formData.deadline); [74]
+
+        // Update formData for submission (or create a new object)
+        const dataToSend = {
+            ...formData,
+            deadline: formattedDeadline,
+            tags: selectedTags, [76]
+        };
+
+        console.log(dataToSend); [74, 75]
+        handleClose(); [75]
+    };
+
+    return (
+        <Modal
+            open={open} [35]
+            onClose={handleClose} [35]
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={style}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                    Create New Task Form
+                </Typography>
+                <form onSubmit={handleSubmit}> [75]
+                    <Grid container spacing={2} alignitems="center"> [37]
+                        <Grid item xs={12}> [62]
+                            <TextField
+                                label="Title" [62]
+                                fullWidth [62]
+                                name="title" [62]
+                                value={formData.title} [62]
+                                onChange={handleChange} [69]
+                            />
+                        </Grid>
+                        <Grid item xs={12}> [77]
+                            <TextField
+                                label="Image" [77]
+                                fullWidth [77]
+                                name="image" [77]
+                                value={formData.image} [77]
+                                onChange={handleChange} [77]
+                            />
+                        </Grid>
+                        <Grid item xs={12}> [77]
+                            <TextField
+                                label="Description" [77]
+                                fullWidth [77]
+                                name="description" [77]
+                                value={formData.description} [77]
+                                onChange={handleChange} [77]
+                                multiline [77]
+                                rows={4} [77]
+                            />
+                        </Grid>
+                        <Grid item xs={12}> [78]
+                            <Autocomplete
+                                multiple [63]
+                                id="tags-autocomplete" [63]
+                                options={tags} [78]
+                                onChange={handleTagChange} [78]
+                                getOptionLabel={(option) => option} [78]
+                                renderInput={(params) => ( [78]
+                                    <TextField
+                                        {...params}
+                                        label="Tags" [78]
+                                        placeholder="Select tags" [78]
+                                    />
+                                )}
+                                value={selectedTags} [76]
+                            />
+                        </Grid>
+                        <Grid item xs={12}> [65]
+                            <LocalizationProvider dateAdapter={AdapterDayjs}> [64]
+                                <DatePicker
+                                    label="Deadline" [66]
+                                    value={formData.deadline} [66]
+                                    onChange={handleDeadlineChange} [66]
+                                    renderInput={(params) => <TextField {...params} fullWidth />} [66]
+                                />
+                            </LocalizationProvider>
+                        </Grid>
+                        <Grid item xs={12}> [66]
+                            <Button
+                                type="submit" [67]
+                                fullWidth [67]
+                                sx={{ padding: '0.9rem' }} [67]
+                                className="custom-button" [67]
+                            >
+                                Create
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </form>
+            </Box>
+        </Modal>
+    );
+}
+
+export default CreateTaskForm;
+--------------------------------------------------------------------------------
+// src/pages/EditTaskForm/EditTaskForm.jsx
+import React, { useState } from 'react';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Button from '@mui/material/Button';
+import '../../index.css'; // Import for .custom-button
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 500,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
+
+function EditTaskForm({ open, handleClose, taskData }) { // RFC snippet [48], added taskData prop for pre-filling
+    const [formData, setFormData] = useState({
+        title: '',
+        image: '',
+        description: '',
+        tags: [],
+        deadline: new Date(),
+    });
+    const [selectedTags, setSelectedTags] = useState([]);
+
+    const tags = [
+        'Angular',
+        'React',
+        'Vue.js',
+        'Spring Boot',
+        'Node.js',
+        'Python',
+    ];
+
+    // useEffect for pre-filling the form (mentioned as future implementation with API) [79, 80]
+    // React.useEffect(() => {
+    //     if (taskData) {
+    //         setFormData({
+    //             title: taskData.title,
+    //             image: taskData.image,
+    //             description: taskData.description,
+    //             tags: taskData.tags,
+    //             deadline: new Date(taskData.deadline), // Convert string to Date object
+    //         });
+    //         setSelectedTags(taskData.tags);
+    //     }
+    // }, [taskData]);
+
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleTagChange = (event, value) => {
+        setSelectedTags(value);
+    };
+
+    const handleDeadlineChange = (date) => {
+        setFormData({ ...formData, deadline: date });
+    };
+
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+
+        const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+        return formattedDate;
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const formattedDeadline = formatDate(formData.deadline);
+
+        const dataToSend = {
+            ...formData,
+            deadline: formattedDeadline,
+            tags: selectedTags,
+        };
+
+        console.log(dataToSend);
+        handleClose();
+        // Logic to update task via API
+    };
+
+    return (
+        <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={style}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                    Edit Task Form {/* Changed title */} [48]
+                </Typography>
+                <form onSubmit={handleSubmit}>
+                    <Grid container spacing={2} alignItems="center">
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Title"
+                                fullWidth
+                                name="title"
+                                value={formData.title}
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Image"
+                                fullWidth
+                                name="image"
+                                value={formData.image}
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Description"
+                                fullWidth
+                                name="description"
+                                value={formData.description}
+                                onChange={handleChange}
+                                multiline
+                                rows={4}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Autocomplete
+                                multiple
+                                id="tags-autocomplete"
+                                options={tags}
+                                onChange={handleTagChange}
+                                getOptionLabel={(option) => option}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Tags"
+                                        placeholder="Select tags"
+                                    />
+                                )}
+                                value={selectedTags}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                    label="Deadline"
+                                    value={formData.deadline}
+                                    onChange={handleDeadlineChange}
+                                    renderInput={(params) => <TextField {...params} fullWidth />}
+                                />
+                            </LocalizationProvider>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                sx={{ padding: '0.9rem' }}
+                                className="custom-button"
+                            >
+                                Update {/* Changed button text */} [81]
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </form>
+            </Box>
+        </Modal>
+    );
+}
+
+export default EditTaskForm;
+--------------------------------------------------------------------------------
+// src/pages/Auth/Auth.jsx
+import React, { useState } from 'react'; [82]
+import SignInForm from './SignInForm'; [20]
+import SignUpForm from './SignUpForm'; [20]
+import './Auth.css'; // Import Auth specific CSS [83]
+
+function Auth() { // RFC snippet [84]
+    const [isRegister, setIsRegister] = useState(false); [82]
+
+    const togglePanel = () => { [85]
+        setIsRegister(prev => !prev); [85]
+    };
+
+    return (
+        <div className="flex justify-center h-screen items-center overflow-hidden"> [82]
+            <div className="box max-w-4xl"> {/* max-w-4xl for overall container */} [82]
+                <div className={`cover ${isRegister ? 'rotate-active' : ''}`}> [82]
+                    {/* Front Cover Content */}
+                    <div className="front"> [86]
+                        <img src="copied_front_image_address" alt="Auth Background" /> {/* Image for front cover */} [86]
+                        <div className="text"> [86]
+                            <span className="text-1">Success is built upon well organized tasks</span> [86]
+                            <span className="text-2 text-xs">Let's get connected</span> [87]
+                        </div>
+                    </div>
+                    {/* Back Cover Content */}
+                    <div className="back"> [87]
+                        <img src="copied_back_image_address" alt="Auth Background" /> {/* Image for back cover */} [88]
+                        {/* Similar text for back cover */}
+                    </div>
+                </div>
+                {/* Forms Section */}
+                <div className="forms h-full"> [88]
+                    <div className="form-content"> [88]
+                        <div className="login-form"> [88]
+                            <SignInForm togglePanel={togglePanel} /> [89]
+                        </div>
+                        <div className="signup-form"> [88]
+                            <SignUpForm togglePanel={togglePanel} /> [90]
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default Auth;
+--------------------------------------------------------------------------------
+/* src/pages/Auth/Auth.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap'); [20]
+
+* {
+    margin: 0; [20]
+    padding: 0; [20]
+    box-sizing: border-box; [20]
+    font-family: 'Poppins', sans-serif; [20]
+}
+
+.box {
+    position: relative; [83]
+    width: 100%; [83]
+    padding: 40px 30px; [83]
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); [83]
+    perspective: 500px; [83]
+    height: 70%; /* Implied for visual layout */ [83]
+}
+
+.cover {
+    position: absolute; [91]
+    top: 0; [91]
+    left: 50%; [91]
+    height: 100%; [91]
+    width: 50%; [91]
+    z-index: 98; [91]
+    transition: 1s ease; [91]
+    transform-origin: left; [91]
+    transform-style: preserve-3d; [91]
+}
+
+.box.rotate-active .cover {
+    transform: rotateY(180deg); [91]
+}
+
+.cover .front,
+.cover .back {
+    position: absolute; [91]
+    top: 0; [91]
+    left: 0; [91]
+    height: 100%; [91]
+    width: 100%; [91]
+    backface-visibility: hidden; [91]
+}
+
+.cover .back {
+    transform: rotateY(180deg); [91]
+}
+
+/* Additional implied styles mentioned but not detailed in transcript */
+/* .cover .image { ... } */ [92]
+/* .cover .text { ... } */ [92]
+/* .text-1, .text-2 { ... } */ [92]
+/* .forms, .form-content, .login-form, .signup-form { ... } */ [92]
+/* .kb8, .text-style { ... } */ [93]
+--------------------------------------------------------------------------------
+// src/pages/Auth/SignInForm.jsx
+import React, { useState } from 'react'; [92]
+import TextField from '@mui/material/TextField'; [94]
+import Button from '@mui/material/Button'; [95]
+import '../../index.css'; // Import for .custom-button [95]
+
+function SignInForm({ togglePanel }) { // RFC snippet [92], received togglePanel prop [89]
+    const [formData, setFormData] = useState({ [92]
+        email: '', [92]
+        password: '', [92]
+    });
+
+    const handleChange = (e) => { [93]
+        const { name, value } = e.target; [93]
+        setFormData({ ...formData, [name]: value }); [93]
+    };
+
+    const handleSubmit = (e) => { [93]
+        e.preventDefault(); [93]
+        console.log(formData); [93]
+        // Login logic here
+    };
+
+    return (
+        <div className="space-y-3 mt-5 flex flex-col items-center gap-2 py-5 justify-center"> {/* Combined class names */} [89, 95]
+            <h1 className="text-lg font-bold text-center kb8 text-style">Login</h1> [93]
+            <form onSubmit={handleSubmit}> [93]
+                <TextField
+                    label="Email" [94]
+                    fullWidth [94]
+                    name="email" [94]
+                    type="email" [94]
+                    value={formData.email} [94]
+                    onChange={handleChange} [94]
+                    placeholder="Enter your email" [94]
+                    margin="normal" // Common MUI prop, implied for spacing
+                />
+                <TextField
+                    label="Password" [94]
+                    fullWidth [94]
+                    name="password" [94]
+                    type="password" [94]
+                    value={formData.password} [94]
+                    onChange={handleChange} [94]
+                    placeholder="Enter your password" [94]
+                    margin="normal" // Common MUI prop, implied for spacing
+                />
+                <div> {/* Wrapper div for button spacing */} [95]
+                    <Button
+                        type="submit" [95]
+                        fullWidth [95]
+                        sx={{ padding: '0.9rem' }} [95]
+                        className="custom-button" [95]
+                    >
+                        Login
+                    </Button>
+                </div>
+            </form>
+            <div className="mt-5 flex items-center gap-2 py-5 justify-center"> {/* Explicitly added for bottom content */} [89]
+                <span>Don't have an account?</span> [89]
+                <Button onClick={togglePanel}>Sign Up</Button> [89]
+            </div>
+        </div>
+    );
+}
+
+export default SignInForm;
+--------------------------------------------------------------------------------
+// src/pages/Auth/SignUpForm.jsx
+import React, { useState } from 'react'; [90]
+import TextField from '@mui/material/TextField'; [90]
+import Button from '@mui/material/Button'; [90]
+import FormControl from '@mui/material/FormControl'; [96]
+import InputLabel from '@mui/material/InputLabel'; [96]
+import Select from '@mui/material/Select'; [96]
+import MenuItem from '@mui/material/MenuItem'; [96]
+import '../../index.css'; // Import for .custom-button [90]
+
+function SignUpForm({ togglePanel }) { // RFC snippet [90], received togglePanel prop
+    const [formData, setFormData] = useState({ [96]
+        fullName: '', [96]
+        email: '', [96]
+        password: '', [96]
+        role: '', [96] // for select input
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(formData); [97]
+        // Registration logic here
+    };
+
+    return (
+        <div className="space-y-3 mt-5 flex flex-col items-center gap-2 py-5 justify-center"> {/* Reused classes */}
+            <h1 className="text-lg font-bold text-center kb8 text-style">Register</h1> {/* Changed header */} [90]
+            <form onSubmit={handleSubmit}>
+                <TextField
+                    label="Full Name" [96]
+                    fullWidth [96]
+                    name="fullName" [96]
+                    value={formData.fullName} [96]
+                    onChange={handleChange} [96]
+                    placeholder="Enter your full name" [96]
+                    margin="normal"
+                />
+                <TextField
+                    label="Email"
+                    fullWidth
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Enter your email"
+                    margin="normal"
+                />
+                <TextField
+                    label="Password"
+                    fullWidth
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Enter your password"
+                    margin="normal"
+                />
+                <FormControl fullWidth margin="normal"> {/* FormControl for Select */} [96]
+                    <InputLabel>Role</InputLabel> [96]
+                    <Select
+                        value={formData.role} [98]
+                        onChange={handleChange} [98]
+                        label="Role" [98]
+                        name="role" [98] // Crucial for handleChange to work
+                    >
+                        <MenuItem value="customer">User</MenuItem> [98]
+                        <MenuItem value="admin">Admin</MenuItem> [98]
+                    </Select>
+                </FormControl>
+                <div>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        sx={{ padding: '0.9rem' }}
+                        className="custom-button"
+                    >
+                        Register {/* Changed button text */} [90]
+                    </Button>
+                </div>
+            </form>
+            <div className="mt-5 flex items-center gap-2 py-5 justify-center">
+                <span>Already have an account?</span> [90]
+                <Button onClick={togglePanel}>Sign In</Button> [90]
+            </div>
+        </div>
+    );
+}
+
+export default SignUpForm;
+
+File: sidebar.jsx
+// [1]
+import { useLocation, useNavigate } from 'react-router-dom'; // `useNavigate` added as it's defined later [2]
+import React, { useState } from 'react'; // Added React and useState for component
+import { useDispatch } from 'react-redux'; // Added for logout
+import { logout } from '../../ReduxToolkit/oSlice'; // Inferred path
+import { Button } from '@mui/material'; // Inferred for Button component
+
+function Sidebar() {
+  const location = useLocation(); // [1]
+  const navigate = useNavigate(); // [2]
+  const dispatch = useDispatch(); // Added for logout
+
+  // [3]
+  const [activeMenu, setActiveMenu] = useState("Home");
+
+  // [4]
+  const handleMenuChange = (item) => {
+    setActiveMenu(item.name); // [5]
+
+    // [6]
+    if (item.name === "Create New Task") { // Corrected from `menuItem.name` and actual menu name
+      // Assuming `handleOpenCreateModal` is a prop or defined elsewhere, not shown in sidebar context
+      // handleOpenCreateModal();
+    } else if (item.name === "Home") { // [6]
+      // [7]
+      const updatedParams = new URLSearchParams(location.search);
+      updatedParams.delete("filter");
+      const queryString = updatedParams.toString();
+      const updatedPath = queryString; // [7]
+
+      // [2]
+      navigate(location.pathname + (updatedPath ? `?${updatedPath}` : '')); // Corrected navigation logic from [2] to [8]
+    } else { // [9] (Else block for applying filters)
+      const updatedParams = new URLSearchParams(location.search); // Inferred from context
+      updatedParams.set("filter", item.value); // [9]
+      navigate(location.pathname + "?" + updatedParams.toString()); // [10]
+    }
+  };
+
+  // [11]
+  const handleLogout = () => {
+    console.log("handle logout"); // [11]
+    dispatch(logout()); // [12]
+  };
+
+  // [13]
+  const menu = [
+    {
+      name: "Home",
+      value: "home",
+      role: ["ROLE_ADMIN", "ROLE_CUSTOMER"],
+    },
+    {
+      name: "Done",
+      value: "done",
+      role: ["ROLE_ADMIN", "ROLE_CUSTOMER"],
+    },
+    {
+      name: "Assigned",
+      value: "assigned",
+      role: ["ROLE_ADMIN"],
+    },
+    {
+      name: "Not Assigned",
+      value: "pending",
+      role: ["ROLE_ADMIN"],
+    },
+    {
+      name: "Create New Task",
+      value: "create_new_task",
+      role: ["ROLE_ADMIN"],
+    },
+    {
+      name: "Notification",
+      value: "notification",
+      role: ["ROLE_CUSTOMER"],
+    },
+  ];
+
+  // Inferred current role for filtering sidebar menu
+  const currentRole = "ROLE_ADMIN"; // Placeholder. In a real app, this would come from Redux user state.
+
+  return (
+    <div className="min-h-[85vh] flex flex-col justify-center fixed w-[20vw] space-y-5"> {/* [14] (Adjusted height and width) */}
+      <div className="w-full flex justify-center"> {/* [15] */}
+        <img
+          src="https://images.unsplash.com/photo-1535713875002-d1d0cf615689?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyfGVufDB8fDB8fHww" // Inferred logo URL
+          alt="Logo"
+          className="border-2 border-[#c24dd0] rounded-full" // [16]
+          style={{ width: '8rem', height: '8rem' }} // [15]
+        />
+      </div>
+      <div className="w-full space-y-3"> {/* Added space-y-3 for menu items */}
+        {menu.filter((item) => item.role.includes(currentRole)).map((item) => ( // [17]
+          <p
+            key={item.name} // Added key for React list rendering
+            className={`py-3 px-5 rounded-full text-center cursor-pointer
+              ${activeMenu === item.name ? "active-menu-item" : "menu-item"}`} // [3]
+            onClick={() => handleMenuChange(item)} // [4]
+          >
+            {item.name}
+          </p>
+        ))}
+      </div>
+      <Button
+        variant="outlined"
+        className="logout-button" // [11]
+        fullWidth // [11]
+        sx={{ padding: "0.7rem", borderRadius: "2rem" }} // [11]
+        onClick={handleLogout} // [11]
+      >
+        Logout
+      </Button>
+    </div>
+  );
+}
+
+export default Sidebar;
+File: app.jsx
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom'; // Using `Router` as alias for `BrowserRouter`
+import { ThemeProvider } from '@mui/material/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserProfile } from './ReduxToolkit/oSlice'; // Inferred path
+
+import { DarkTheme } from './Theme/DarkTheme'; // Inferred path and name for the theme file
+import Navbar from './pages/Navbar/Navbar'; // Inferred path
+import Homepage from './pages/Home/Homepage'; // Inferred path
+import Auth from './pages/Auth/Auth'; // Inferred path for Auth page
+
+function App() {
+  const dispatch = useDispatch(); // [18]
+  const { o } = useSelector((store) => store.auth); // [18] (Corrected from store.o to store.auth based on `store.js` content)
+
+  useEffect(() => { // [18]
+    dispatch(getUserProfile(localStorage.getItem('jwt') || o.jwt)); // [18], [19]
+  }, [dispatch, o.jwt]); // [19] (Added dispatch to dependency array for completeness)
+
+  return (
+    <Router> {/* [20] */}
+      <ThemeProvider theme={DarkTheme}> {/* [21] */}
+        {o.user ? ( // [19]
+          <div className="relative"> {/* Wrapping for Navbar and Homepage */}
+            <Navbar /> {/* [22] */}
+            <Homepage /> {/* [23] */}
+          </div>
+        ) : (
+          <Auth /> // Render Auth page if user not logged in
+        )}
+      </ThemeProvider>
+    </Router>
+  );
+}
+
+export default App;
+File: createTask.jsx
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { TextField, Button, Grid, Autocomplete } from '@mui/material'; // Inferred imports for MUI components
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers'; // Inferred imports for DatePicker
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'; // Inferred import for AdapterDayjs
+import { createTask } from '../../ReduxToolkit/taskSlice'; // Inferred path
+import { Modal, Box } from '@mui/material'; // Inferred for modal structure
+
+function CreateTaskForm({ open, handleClose }) { // Added props for modal control
+  const dispatch = useDispatch(); // [24]
+
+  // [25]
+  const [formData, setFormData] = useState({
+    title: "",
+    image: "",
+    description: "",
+    // [26] `tags` property is explicitly set in handleSubmit from `selectedTexts`
+    deadline: new Date(), // [27]
+  });
+
+  // [28]
+  const [selectedTexts, setSelectedTexts] = useState([]);
+
+  // [27]
+  const handleChange = (e) => {
+    const { name, value } = e.target; // [28]
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // [28]
+  const handleTagChange = (event, value) => {
+    setSelectedTexts(value); // [28]
+  };
+
+  // [29]
+  const handleDeadlineChange = (date) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      deadline: date,
+    }));
+  };
+
+  // [30]
+  const handleSubmit = (e) => {
+    e.preventDefault(); // [30]
+
+    // [31]
+    const updatedFormData = { ...formData };
+    updatedFormData.deadline = formatDate(updatedFormData.deadline);
+    updatedFormData.tags = selectedTexts; // [26]
+
+    dispatch(createTask(updatedFormData)); // [24]
+    console.log("form data", updatedFormData); // [30] (Adjusted to show updatedFormData)
+    handleClose(); // Inferred: Close modal after submission
+  };
+
+  // [32]
+  const tags = ["Angular", "React", "Vuejs", "Spring Boot", "Nodejs", "Python"];
+
+  // [33]
+  const formatDate = (date) => {
+    const year = date.getFullYear(); // [34]
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // [33]
+    const day = String(date.getDate()).padStart(2, '0'); // [33]
+    const hours = String(date.getHours()).padStart(2, '0'); // [33]
+    const minutes = String(date.getMinutes()).padStart(2, '0'); // [33]
+    const seconds = String(date.getSeconds()).padStart(2, '0'); // [33]
+    const milliseconds = String(date.getMilliseconds()).padStart(3, '0'); // [33]
+
+    // [34]
+    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+    return formattedDate; // [31]
+  };
+
+  return (
+    <Modal open={open} onClose={handleClose}>
+      <Box className="modal-container"> {/* Inferred Modal content styling */}
+        <h1 className="text-2xl font-bold text-center mb-5">Create New Task</h1> {/* Inferred title styling */}
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2} alignItems="center"> {/* [35] */}
+            <Grid item xs={12}> {/* [25] */}
+              <TextField
+                label="Title" // [25]
+                fullWidth // [25]
+                name="title" // [25]
+                value={formData.title} // [27]
+                onChange={handleChange} // [27]
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Image" // [36]
+                fullWidth
+                name="image"
+                value={formData.image}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Description" // [36]
+                fullWidth
+                name="description"
+                multiline // [36]
+                rows={4} // [36]
+                value={formData.description}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Autocomplete
+                multiple // [37]
+                id="tags-autocomplete" // Inferred ID for `Autocomplete`
+                options={tags} // [32]
+                value={selectedTexts} // Bind to state
+                onChange={handleTagChange} // [38]
+                getOptionLabel={(option) => option} // [38]
+                renderInput={(params) => ( // [38]
+                  <TextField {...params} label="Tags" /> // Placeholder removed as per [38]
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}> {/* [39] */}
+              <LocalizationProvider dateAdapter={AdapterDayjs}> {/* [39], [40] */}
+                <DatePicker
+                  label="Deadline" // [41]
+                  value={formData.deadline}
+                  onChange={handleDeadlineChange} // [41]
+                  renderInput={(params) => <TextField {...params} fullWidth />} // [41]
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                fullWidth // [29]
+                sx={{ padding: "0.9rem" }} // [29]
+                className="custom-button" // [29]
+                type="submit" // [29]
+              >
+                Create
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Box>
+    </Modal>
+  );
+}
+
+export default CreateTaskForm;
+File: ReduxToolkit/api.js
+// [42]
+import axios from 'axios';
+
+// [42]
+export const BASE_URL = 'http://localhost:5000'; // [43]
+
+// [42]
+export const API = axios.create({
+  baseURL: BASE_URL, // [43]
+  headers: {
+    'Content-Type': 'application/json', // [44]
+  },
+});
+
+// [44]
+export const setAuthHeader = (token, api) => {
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`; // [44]
+  } else {
+    delete api.defaults.headers.common['Authorization']; // [44]
+  }
+};
+File: ReduxToolkit/oSlice.js
+// [44]
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { API, setAuthHeader } from './api'; // [45]
+
+// [44]
+export const login = createAsyncThunk(
+  'auth/login', // [46]
+  async (userData, { rejectWithValue }) => { // [47]
+    try {
+      const { data } = await API.post('/auth/signin', userData); // [47]
+      localStorage.setItem('jwt', data.jwt); // [48]
+      console.log('Login success', data); // [49]
+      return data;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw rejectWithValue(error.response.data.error); // [50]
+    }
+  }
+);
+
+// [48]
+export const register = createAsyncThunk(
+  'auth/register',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const { data } = await API.post('/auth/signup', userData); // [48]
+      console.log('Register success', data); // [49]
+      return data;
+    } catch (error) {
+      console.error('Register error:', error);
+      throw rejectWithValue(error.response.data.error); // [50]
+    }
+  }
+);
+
+// [49]
+export const logout = createAsyncThunk(
+  'auth/logout',
+  async (_, { rejectWithValue }) => { // Added rejectWithValue for consistency
+    try {
+      localStorage.clear(); // [49]
+      console.log('Logout success');
+      return true; // Return something on success
+    } catch (error) {
+      console.error('Logout error:', error);
+      throw rejectWithValue(error.message); // Rejection with a generic message if no response
+    }
+  }
+);
+
+// [49]
+export const getUserProfile = createAsyncThunk(
+  'auth/getUserProfile',
+  async (jwt, { rejectWithValue }) => { // [45]
+    try {
+      setAuthHeader(jwt, API); // [45]
+      const { data } = await API.get('/api/users/profile'); // [45]
+      console.log('User profile success', data); // [45]
+      return data;
+    } catch (error) {
+      console.error('Get user profile error:', error);
+      throw rejectWithValue(error.response.data.error); // [50]
+    }
+  }
+);
+
+// [45]
+export const getUserList = createAsyncThunk(
+  'auth/getUserList',
+  async (jwt, { rejectWithValue }) => { // [45]
+    try {
+      setAuthHeader(jwt, API); // [51]
+      const { data } = await API.get('/api/users'); // [51]
+      console.log('User list success', data); // [51]
+      return data;
+    } catch (error) {
+      console.error('Get user list error:', error);
+      throw rejectWithValue(error.response.data.error); // [50]
+    }
+  }
+);
+
+// [52]
+const authSlice = createSlice({
+  name: 'auth', // [53]
+  initialState: { // [53]
+    user: null,
+    loggedIn: false,
+    loading: false,
+    error: null,
+    jwt: null,
+    users: [], // [53] (for user list)
+  },
+  reducers: {}, // [53]
+  extraReducers: (builder) => { // [53]
+    builder
+      // [54]
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      // [54]
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
+        state.jwt = action.payload.jwt; // [50]
+        state.loggedIn = true; // [50]
+      })
+      // [50]
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message; // [50]
+      })
+      // [55]
+      .addCase(register.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(register.fulfilled, (state, action) => {
+        state.loading = false;
+        state.jwt = action.payload.jwt;
+        state.loggedIn = true;
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      // [55]
+      .addCase(getUserProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      // [56]
+      .addCase(getUserProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload; // [56]
+        state.loggedIn = true; // [56]
+      })
+      .addCase(getUserProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      // [56]
+      .addCase(getUserList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserList.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = action.payload; // [56]
+      })
+      .addCase(getUserList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      // [56]
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null; // [57]
+        state.jwt = null; // [57]
+        state.users = []; // [57]
+        state.error = null; // [57]
+        state.loggedIn = false; // [57]
+      });
+  },
+});
+
+// [57]
+export default authSlice.reducer;
+File: ReduxToolkit/store.js
+// [58]
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import thunk from 'redux-thunk'; // [59] (Corrected from Redux Tunk)
+
+// [60]
+import authReducer from './oSlice';
+import taskReducer from './taskSlice';
+import submissionReducer from './submissionSlice'; // [61]
+
+// [59]
+const rootReducer = combineReducers({
+  auth: authReducer, // [60]
+  task: taskReducer, // [60]
+  submission: submissionReducer, // [61]
+});
+
+// [58]
+const store = configureStore({
+  reducer: rootReducer, // [59]
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk), // [59]
+});
+
+// [62]
+export default store;
+File: ReduxToolkit/taskSlice.js
+// [60]
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { API, setAuthHeader } from './api'; // [63]
+
+// [60]
+export const fetchTasks = createAsyncThunk(
+  'task/fetchTasks',
+  async (status, { rejectWithValue }) => { // [63]
+    try {
+      setAuthHeader(localStorage.getItem('jwt'), API); // [63]
+      const { data } = await API.get('/api/tasks', { params: status }); // [63]
+      // console.log('fetch tasks data', data); // Removed as per [64]
+      return data;
+    } catch (error) {
+      console.error('Fetch tasks error:', error);
+      throw rejectWithValue(error.response.data.error); // [63]
+    }
+  }
+);
+
+// [63]
+export const fetchUsersTask = createAsyncThunk(
+  'task/fetchUsersTask',
+  async (status, { rejectWithValue }) => { // [63]
+    try {
+      setAuthHeader(localStorage.getItem('jwt'), API); // [65]
+      const { data } = await API.get('/api/users/tasks', { params: status }); // [65]
+      // console.log('fetch users task data', data); // Removed as per [64]
+      return data;
+    } catch (error) {
+      console.error('Fetch users task error:', error);
+      throw rejectWithValue(error.response.data.error); // [63]
+    }
+  }
+);
+
+// [65]
+export const fetchTaskById = createAsyncThunk(
+  'task/fetchTaskById',
+  async (taskId, { rejectWithValue }) => { // [65]
+    try {
+      setAuthHeader(localStorage.getItem('jwt'), API); // [65]
+      const { data } = await API.get('/api/tasks/' + taskId); // [65]
+      // console.log('fetch task by ID data', data); // Removed as per [64]
+      return data;
+    } catch (error) {
+      console.error('Fetch task by ID error:', error);
+      throw rejectWithValue(error.response.data.error); // [65]
+    }
+  }
+);
+
+// [65]
+export const createTask = createAsyncThunk(
+  'task/createTask',
+  async (taskData, { rejectWithValue }) => { // [66]
+    try {
+      setAuthHeader(localStorage.getItem('jwt'), API); // [66]
+      const { data } = await API.post('/api/tasks', taskData); // [66]
+      // console.log('create task success', data); // Removed as per [64]
+      return data;
+    } catch (error) {
+      console.error('Create task error:', error);
+      throw rejectWithValue(error.response.data.error); // [66]
+    }
+  }
+);
+
+// [66]
+export const updateTask = createAsyncThunk(
+  'task/updateTask',
+  async ({ id, updatedTaskData }, { rejectWithValue }) => { // [67]
+    try {
+      setAuthHeader(localStorage.getItem('jwt'), API); // [67]
+      const { data } = await API.put('/api/tasks/' + id, updatedTaskData); // [67]
+      // console.log('update task success', data); // Removed as per [64]
+      return data;
+    } catch (error) {
+      console.error('Update task error:', error);
+      throw rejectWithValue(error.response.data.error); // [67]
+    }
+  }
+);
+
+// [67]
+export const assignTaskToUser = createAsyncThunk(
+  'task/assignTaskToUser',
+  async ({ taskId, userId }, { rejectWithValue }) => { // [67]
+    try {
+      setAuthHeader(localStorage.getItem('jwt'), API); // [68]
+      const { data } = await API.put(`/api/tasks/${taskId}/user/${userId}/assign`); // [68]
+      // console.log('assign task success', data); // Removed as per [64]
+      return data;
+    } catch (error) {
+      console.error('Assign task error:', error);
+      throw rejectWithValue(error.response.data.error); // [68]
+    }
+  }
+);
+
+// [68]
+export const deleteTask = createAsyncThunk(
+  'task/deleteTask',
+  async (taskId, { rejectWithValue }) => { // [68]
+    try {
+      setAuthHeader(localStorage.getItem('jwt'), API); // [68]
+      await API.delete('/api/tasks/' + taskId); // [68]
+      console.log('delete task successfully', taskId); // [69]
+      return taskId; // Return the ID of the deleted task
+    } catch (error) {
+      console.error('Delete task error:', error);
+      throw rejectWithValue(error.response.data.error); // [68]
+    }
+  }
+);
+
+// [69]
+const taskSlice = createSlice({
+  name: 'task',
+  initialState: { // [69]
+    tasks: [], // For admin, all tasks
+    loading: false,
+    error: null,
+    taskDetails: null, // [69]
+    usersTask: [], // [69] For regular users
+  },
+  reducers: {}, // [70]
+  extraReducers: (builder) => { // [70]
+    builder
+      // [70]
+      .addCase(fetchTasks.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      // [70]
+      .addCase(fetchTasks.fulfilled, (state, action) => {
+        state.loading = false;
+        state.tasks = action.payload.tasks; // [70]
+      })
+      // [71]
+      .addCase(fetchTasks.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message; // [71]
+      })
+      // [71]
+      .addCase(fetchUsersTask.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      // [72]
+      .addCase(fetchUsersTask.fulfilled, (state, action) => {
+        state.loading = false;
+        state.usersTask = action.payload; // [72]
+      })
+      .addCase(fetchUsersTask.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      // [72]
+      .addCase(createTask.fulfilled, (state, action) => {
+        state.loading = false;
+        state.tasks.push(action.payload); // [72]
+      })
+      .addCase(createTask.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      // [73]
+      .addCase(updateTask.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedTask = action.payload; // [73]
+        state.tasks = state.tasks.map((task) =>
+          task.id === updatedTask.id ? updatedTask : task // [73], [74]
+        );
+      })
+      .addCase(updateTask.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      // [74]
+      .addCase(assignTaskToUser.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedTask = action.payload; // [75]
+        state.tasks = state.tasks.map((task) =>
+          task.id === updatedTask.id ? updatedTask : task // [75]
+        );
+      })
+      .addCase(assignTaskToUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      // [76]
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        state.loading = false;
+        const deletedTaskId = action.payload; // [76]
+        state.tasks = state.tasks.filter((task) => task.id !== deletedTaskId); // [76]
+      })
+      .addCase(deleteTask.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      // [77]
+      .addCase(fetchTaskById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.taskDetails = action.payload; // [77]
+      })
+      .addCase(fetchTaskById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
+  },
+});
+
+// [78]
+export default taskSlice.reducer;
+File: ReduxToolkit/submissionSlice.js
+// [78]
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { API, setAuthHeader } from './api'; // [79]
+
+// [78]
+export const submitTask = createAsyncThunk(
+  'submissions/submitTask', // [78]
+  async ({ taskId, githubLink }, { rejectWithValue }) => { // [79]
+    try {
+      setAuthHeader(localStorage.getItem('jwt'), API); // [79]
+      const { data } = await API.post(`/api/submissions/${taskId}`, { githubLink }); // [79]
+      console.log('Submitted task data', data); // [80]
+      return data;
+    } catch (error) {
+      console.error('Submit task error:', error);
+      throw rejectWithValue(error.response.data.error); // [80]
+    }
+  }
+);
+
+// [80]
+export const fetchAllSubmission = createAsyncThunk(
+  'submissions/fetchAllSubmissions',
+  async (_, { rejectWithValue }) => { // [80]
+    try {
+      setAuthHeader(localStorage.getItem('jwt'), API); // [80]
+      const { data } = await API.get('/api/submissions'); // [80]
+      // console.log('Fetch all submissions data', data); // Removed as per [64]
+      return data;
+    } catch (error) {
+      console.error('Fetch all submissions error:', error);
+      throw rejectWithValue(error.response.data.error); // [80]
+    }
+  }
+);
+
+// [80]
+export const fetchSubmissionsByTaskId = createAsyncThunk(
+  'submissions/fetchSubmissionsByTaskId',
+  async (taskId, { rejectWithValue }) => { // [81]
+    try {
+      setAuthHeader(localStorage.getItem('jwt'), API); // [81]
+      const { data } = await API.get(`/api/submissions/task/${taskId}`); // [81]
+      // console.log('Fetch submissions by task ID data', data); // Removed as per [64]
+      return data;
+    } catch (error) {
+      console.error('Fetch submissions by task ID error:', error);
+      throw rejectWithValue(error.response.data.error); // [81]
+    }
+  }
+);
+
+// [81]
+export const acceptDeclineSubmission = createAsyncThunk(
+  'submissions/acceptDeclineSubmission', // [82]
+  async ({ id, status }, { rejectWithValue }) => { // [82]
+    try {
+      setAuthHeader(localStorage.getItem('jwt'), API); // [82]
+      const { data } = await API.put(`/api/submissions/${id}/status`, { status }); // [82]
+      // console.log('Accept/Decline submission data', data); // Removed as per [64]
+      return data;
+    } catch (error) {
+      console.error('Accept/Decline submission error:', error);
+      throw rejectWithValue(error.response.data.error); // [82]
+    }
+  }
+);
+
+// [83]
+const submissionSlice = createSlice({
+  name: 'submission',
+  initialState: { // [83]
+    submissions: [],
+    status: 'idle', // Inferred initial status
+    error: null,
+  },
+  reducers: {}, // [83]
+  extraReducers: (builder) => { // [83]
+    builder
+      // [83]
+      .addCase(submitTask.pending, (state) => {
+        state.status = 'loading'; // [84]
+        state.error = null;
+      })
+      // [84]
+      .addCase(submitTask.fulfilled, (state, action) => {
+        state.status = 'succeeded'; // [84]
+        state.submissions.push(action.payload); // [84]
+      })
+      .addCase(submitTask.rejected, (state, action) => {
+        state.status = 'failed'; // [84]
+        state.error = action.error.message; // [84]
+      })
+      // [84]
+      .addCase(fetchAllSubmission.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(fetchAllSubmission.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.submissions = action.payload; // [84]
+      })
+      .addCase(fetchAllSubmission.rejected, (state, action) => {
+        state.status = 'failed'; // [85]
+        state.error = action.error.message; // [85]
+      })
+      // [85]
+      .addCase(fetchSubmissionsByTaskId.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(fetchSubmissionsByTaskId.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.submissions = action.payload; // [85]
+      })
+      .addCase(fetchSubmissionsByTaskId.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      // [85]
+      .addCase(acceptDeclineSubmission.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        const updatedSubmission = action.payload;
+        state.submissions = state.submissions.map((item) =>
+          item.id === updatedSubmission.id ? updatedSubmission : item // [85], [86]
+        );
+      })
+      .addCase(acceptDeclineSubmission.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      });
+  },
+});
+
+// [86]
+export default submissionSlice.reducer;
+File: index.js
+// [87]
+import React from 'react';
+import ReactDOM from 'react-dom/client'; // Assuming React 18 for createRoot
+import { Provider } from 'react-redux'; // [87]
+import store from './ReduxToolkit/store'; // [88]
+import App from './App';
+import './index.css'; // [89]
+
+// Root rendering for React 18
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <Provider store={store}> {/* [87] */}
+      <App />
+    </Provider>
+  </React.StrictMode>
+);
+File: tasklist.jsx
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { fetchTasks, fetchUsersTask } from '../../ReduxToolkit/taskSlice'; // Inferred path
+import TaskCard from '../TaskCard/TaskCard'; // Inferred path
+
+function TaskList() {
+  const dispatch = useDispatch(); // [61]
+  const { tasks, usersTask } = useSelector((store) => store.task); // [61], [90]
+  const { o } = useSelector((store) => store.auth); // Added based on context [91, 92]
+
+  const location = useLocation(); // [93]
+  const queryParams = new URLSearchParams(location.search); // [93]
+  const filterValue = queryParams.get('filter'); // [93]
+
+  useEffect(() => { // [93]
+    if (o.user?.role === 'ROLE_ADMIN') { // [91]
+      dispatch(fetchTasks({ status: filterValue })); // [91]
+    } else {
+      dispatch(fetchUsersTask({ status: filterValue })); // [91]
+    }
+  }, [filterValue, o.user?.role, dispatch]); // [91], [92] (Added dispatch to dependencies)
+
+  return (
+    <div className="w-full flex justify-center mb-10"> {/* [94] (Adjusted width and margin) */}
+      <div className="space-y-5 w-[67vw]"> {/* [94] (Specific width for task list container) */}
+        {o.user?.role === 'ROLE_ADMIN' ? ( // [92]
+          tasks.map((item) => ( // [94]
+            <TaskCard key={item.id} item={item} /> // [94] (Added key for map)
+          ))
+        ) : (
+          usersTask.map((item) => ( // [90]
+            <TaskCard key={item.id} item={item} /> // [94]
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default TaskList;
+File: navbar.jsx
+import React from 'react';
+import { Avatar } from '@mui/material'; // Inferred import
+import { useSelector } from 'react-redux'; // [95]
+
+function Navbar() {
+  const { o } = useSelector((store) => store.auth); // [95] (Corrected from store.auth.auth to store.auth)
+
+  return (
+    <div className="navbar-container py-3 px-5 lg:px-10 flex justify-between items-center fixed w-full z-10 top-0 left-0 right-0"> {/* [96] (Added fixed positioning and z-index) */}
+      <p className="font-bold text-lg">J Task Management</p> {/* [96] */}
+      <div className="flex items-center gap-5"> {/* [96] */}
+        <p className="text-white">{o.user?.fullName}</p> {/* [95] */}
+        <Avatar src="https://images.unsplash.com/photo-1535713875002-d1d0cf615689?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyfGVufDB8fDB8fHww" /> {/* [14] (Avatar image) */}
+      </div>
+    </div>
+  );
+}
+
+export default Navbar;
+File: taskcard.jsx
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { MoreVert as MoreVertIcon } from '@mui/icons-material'; // [97]
+import { Menu, MenuItem, IconButton } from '@mui/material'; // Inferred imports for MUI components
+import UserList from '../../User/UserList'; // Inferred path
+import SubmissionList from '../../Submission/SubmissionList'; // Inferred path
+import EditTaskForm from '../EditTaskForm/EditTaskForm'; // Inferred path
+import SubmitFormModel from '../SubmitTaskForm/SubmitFormModel'; // [98] (Inferred path)
+
+import { deleteTask } from '../../ReduxToolkit/taskSlice'; // [99]
+
+function TaskCard({ item }) { // Item prop for task details
+  const dispatch = useDispatch(); // [99]
+  const location = useLocation(); // [100]
+  const navigate = useNavigate(); // [100]
+  const { o } = useSelector((store) => store.auth); // [101]
+
+  // State for menu and modals
+  const [anchorEl, setAnchorEl] = useState(null); // For MUI menu [102]
+  const openMenu = Boolean(anchorEl); // [102]
+  const [openUserList, setOpenUserList] = useState(false); // [103]
+  const [openSubmissionList, setOpenSubmissionList] = useState(false); // [104]
+  const [openUpdateTaskForm, setOpenUpdateTaskForm] = useState(false); // [105]
+  const [openSubmitFormModel, setOpenSubmitFormModel] = useState(false); // [106]
+
+  const handleMenuClick = (event) => { // [102]
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => { // [102]
+    setAnchorEl(null);
+  };
+
+  const handleOpenUserList = () => { // [107]
+    setOpenUserList(true); // [108]
+    handleMenuClose(); // [108]
+    const updatedParams = new URLSearchParams(location.search); // [100] (Copied from sidebar, context for task id)
+    updatedParams.set('taskId', item.id); // [109] (Sets task ID in URL for user list)
+    navigate(location.pathname + '?' + updatedParams.toString()); // [109]
+  };
+
+  const handleOpenSubmissionList = () => { // [107]
+    setOpenSubmissionList(true); // [110]
+    handleMenuClose(); // [110]
+    const updatedParams = new URLSearchParams(location.search); // [111] (Inferred copy)
+    updatedParams.set('taskId', item.id); // [111]
+    navigate(location.pathname + '?' + updatedParams.toString()); // [111]
+  };
+
+  const handleOpenUpdateTaskModel = () => { // [112]
+    setOpenUpdateTaskForm(true); // [105]
+    handleMenuClose(); // [105]
+    const updatedParams = new URLSearchParams(location.search); // [100]
+    updatedParams.set('taskId', item.id); // [109] (Sets task ID in URL for edit form)
+    navigate(location.pathname + '?' + updatedParams.toString()); // [109]
+  };
+
+  const handleDeleteTask = () => { // [112]
+    dispatch(deleteTask(item.id)); // [99]
+    handleMenuClose(); // [113]
+  };
+
+  const handleOpenSubmitFormModel = () => { // [106]
+    setOpenSubmitFormModel(true);
+    handleMenuClose();
+    const updatedParams = new URLSearchParams(location.search);
+    updatedParams.set('taskId', item.id);
+    navigate(location.pathname + '?' + updatedParams.toString());
+  };
+
+  return (
+    <div className="card lg:flex justify-between p-5 rounded-md"> {/* [114] */}
+      <div className="lg:flex gap-5 items-center w-[90%] lg:w-[70%]"> {/* [115] */}
+        <div className="image"> {/* [115] */}
+          <img
+            className="object-cover w-full h-full rounded-md" // [115]
+            src={item.image} // [116]
+            alt={item.title} // Inferred alt text
+            style={{ width: '7rem', height: '7rem' }} // [117]
+          />
+        </div>
+        <div className="space-y-2"> {/* [115] */}
+          <h1 className="font-bold text-lg">{item.title}</h1> {/* [115], [116] */}
+          <p className="text-gray-500 text-sm">{item.description}</p> {/* [118], [116] */}
+          <div className="flex flex-wrap gap-2 items-center"> {/* [118] */}
+            {item.tags?.map((tag, index) => ( // [119] (Added optional chaining for tags)
+              <span key={index} className="py-1 px-5 rounded-full text-tech"> {/* [118] (Added key for map) */}
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div>
+        <IconButton
+          aria-label="more"
+          id="long-button"
+          aria-controls={openMenu ? 'long-menu' : undefined}
+          aria-expanded={openMenu ? 'true' : undefined}
+          aria-haspopup="true"
+          onClick={handleMenuClick}
+        >
+          <MoreVertIcon /> {/* [97] */}
+        </IconButton>
+        <Menu
+          id="long-menu"
+          MenuListProps={{
+            'aria-labelledby': 'long-button',
+          }}
+          anchorEl={anchorEl}
+          open={openMenu}
+          onClose={handleMenuClose}
+        >
+          {o.user?.role === 'ROLE_ADMIN' ? ( // [107], [101]
+            <>
+              <MenuItem onClick={handleOpenUserList}>Assigned User</MenuItem> {/* [107] */}
+              <MenuItem onClick={handleOpenSubmissionList}>See Submissions</MenuItem> {/* [107] */}
+              <MenuItem onClick={handleOpenUpdateTaskModel}>Edit</MenuItem> {/* [107] */}
+              <MenuItem onClick={handleDeleteTask}>Delete</MenuItem> {/* [107] */}
+            </>
+          ) : ( // [106]
+            <MenuItem onClick={handleOpenSubmitFormModel}>Submit</MenuItem>
+          )}
+        </Menu>
+      </div>
+
+      {/* Modals/Forms */}
+      <UserList open={openUserList} handleClose={() => setOpenUserList(false)} /> {/* [108] */}
+      <SubmissionList open={openSubmissionList} handleClose={() => setOpenSubmissionList(false)} /> {/* [110] */}
+      <EditTaskForm open={openUpdateTaskForm} handleClose={() => setOpenUpdateTaskForm(false)} /> {/* [113] */}
+      <SubmitFormModel open={openSubmitFormModel} handleClose={() => setOpenSubmitFormModel(false)} /> {/* [98] */}
+    </div>
+  );
+}
+
+export default TaskCard;
+File: userlist.jsx
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { getUserList } from '../../ReduxToolkit/oSlice'; // Inferred path
+import { assignTaskToUser } from '../../ReduxToolkit/taskSlice'; // Inferred path
+import { ListItem, ListItemAvatar, Avatar, ListItemText, Button, Divider, Modal, Box } from '@mui/material'; // Inferred imports for MUI components
+
+function UserList({ open, handleClose }) { // Receive open and handleClose as props from TaskCard
+  const dispatch = useDispatch(); // [120]
+  const location = useLocation(); // [121]
+  const queryParams = new URLSearchParams(location.search); // [121]
+  const taskID = queryParams.get('taskId'); // [121]
+
+  useEffect(() => { // [120]
+    if (open) { // Only fetch when modal is open
+      dispatch(getUserList(localStorage.getItem('jwt'))); // [122]
+    }
+  }, [dispatch, open]); // Added open to dependency array
+
+  const { users } = useSelector((store) => store.auth); // [122]
+
+  const handleAssignTask = (userId) => { // [123] (Function to handle assignment)
+    if (taskID) { // Ensure taskID exists before dispatching
+      dispatch(assignTaskToUser({ taskId: taskID, userId })); // [123] (Using taskID from query params)
+      handleClose(); // Close model after assignment
+    }
+  };
+
+  return (
+    <Modal open={open} onClose={handleClose}>
+      <Box className="modal-container bg-[#0C071B] p-5 rounded-md shadow-lg" sx={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, outline: 'none'}}> {/* Inferred Modal content styling and positioned it */}
+        <h2 className="text-xl font-bold text-white mb-4">Assign Task to User</h2> {/* Inferred title */}
+        {users?.length > 0 ? ( // Check if users exist
+          <div className="max-h-[70vh] overflow-y-auto"> {/* Added scroll for long lists */}
+            {users.map((user, index) => ( // [122]
+              <React.Fragment key={user.id}> {/* Added Fragment and key */}
+                <ListItem className="flex items-center justify-between w-full p-2"> {/* [124] */}
+                  <ListItemAvatar>
+                    <Avatar /> {/* [124] (Inferred generic avatar) */}
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={user.fullName} // [124]
+                    secondary={user.email} // Inferred, commonly present for users
+                    sx={{ color: 'white' }} // Inferred text color
+                  />
+                  <Button
+                    className="custom-button" // [125]
+                    onClick={() => handleAssignTask(user.id)} // [123] (Call assign function)
+                    sx={{ padding: "0.5rem 1rem" }} // Inferred button padding
+                  >
+                    Select
+                  </Button>
+                </ListItem>
+                {index !== users.length - 1 && <Divider sx={{borderColor: '#215106'}} />} {/* [126], [127] (Added custom border color for divider) */}
+              </React.Fragment>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-white">No users found.</p> // Fallback if no users
+        )}
+      </Box>
+    </Modal>
+  );
+}
+
+export default UserList;
+File: editTaskForm.jsx
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { fetchTaskById, updateTask } from '../../ReduxToolkit/taskSlice'; // Inferred import
+import { TextField, Button, Grid, Autocomplete } from '@mui/material'; // Inferred imports
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers'; // Inferred imports
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'; // Inferred imports
+import { Modal, Box } from '@mui/material'; // Inferred for modal structure
+
+function EditTaskForm({ open, handleClose }) { // Received as props from TaskCard
+  const dispatch = useDispatch(); // [128]
+  const location = useLocation(); // [100]
+  const queryParams = new URLSearchParams(location.search); // [129]
+  const taskId = queryParams.get('taskId'); // [129]
+
+  const { taskDetails } = useSelector((store) => store.task); // [128], [130]
+
+  const [formData, setFormData] = useState({
+    title: "",
+    image: "",
+    description: "",
+    tags: [],
+    deadline: new Date(),
+  });
+
+  const [selectedTexts, setSelectedTexts] = useState([]); // State for Autocomplete
+
+  useEffect(() => { // [128]
+    if (taskId) { // Only dispatch if taskId is present
+      dispatch(fetchTaskById(taskId)); // [128]
+    }
+  }, [taskId, dispatch]);
+
+  useEffect(() => { // [130]
+    if (taskDetails) {
+      setFormData({
+        ...taskDetails,
+        deadline: new Date(taskDetails.deadline), // Convert string to Date object
+        tags: taskDetails.tags || [], // Ensure tags is an array
+      });
+      setSelectedTexts(taskDetails.tags || []); // Set selected tags from fetched data
+    }
+  }, [taskDetails]); // [130]
+
+  const handleChange = (e) => { // Copied from createTask.jsx [27]
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleTagChange = (event, value) => { // Copied from createTask.jsx [28]
+    setSelectedTexts(value);
+  };
+
+  const handleDeadlineChange = (date) => { // Copied from createTask.jsx [29]
+    setFormData((prevData) => ({
+      ...prevData,
+      deadline: date,
+    }));
+  };
+
+  const handleSubmit = (e) => { // [77]
+    e.preventDefault();
+    const updatedFormData = { ...formData };
+    updatedFormData.deadline = formatDate(updatedFormData.deadline); // [31]
+    updatedFormData.tags = selectedTexts; // [26] (Ensures tags are updated from selectedTexts state)
+
+    dispatch(updateTask({ id: taskId, updatedTaskData: updatedFormData })); // [131]
+    handleClose(); // Close modal after update
+  };
+
+  const tags = ["Angular", "React", "Vuejs", "Spring Boot", "Nodejs", "Python"]; // Copied from createTask.jsx [32]
+
+  const formatDate = (date) => { // Copied from createTask.jsx [33]
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+
+    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+    return formattedDate;
+  };
+
+  return (
+    <Modal open={open} onClose={handleClose}>
+      <Box className="modal-container bg-[#0C071B] p-5 rounded-md shadow-lg" sx={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 600, outline: 'none'}}> {/* Inferred Modal content styling and width */}
+        <h1 className="text-2xl font-bold text-center mb-5 text-white">Edit Task</h1> {/* Inferred title styling */}
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12}>
+              <TextField
+                label="Title"
+                fullWidth
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                sx={{ input: { color: 'white' }, '& .MuiInputLabel-root': { color: 'gray' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'gray' } }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Image"
+                fullWidth
+                name="image"
+                value={formData.image}
+                onChange={handleChange}
+                sx={{ input: { color: 'white' }, '& .MuiInputLabel-root': { color: 'gray' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'gray' } }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Description"
+                fullWidth
+                name="description"
+                multiline
+                rows={4}
+                value={formData.description}
+                onChange={handleChange}
+                sx={{ textarea: { color: 'white' }, '& .MuiInputLabel-root': { color: 'gray' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'gray' } }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Autocomplete
+                multiple
+                id="edit-tags-autocomplete"
+                options={tags}
+                value={selectedTexts} // Bind value to selectedTexts state
+                onChange={handleTagChange}
+                getOptionLabel={(option) => option}
+                renderInput={(params) => (
+                  <TextField {...params} label="Tags" sx={{ input: { color: 'white' }, '& .MuiInputLabel-root': { color: 'gray' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'gray' } }} />
+                )}
+                sx={{ '& .MuiChip-label': { color: 'white' }, '& .MuiSvgIcon-root': { color: 'white' } }} // Style for chips and icons
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Deadline"
+                  value={formData.deadline}
+                  onChange={handleDeadlineChange}
+                  renderInput={(params) => <TextField {...params} fullWidth sx={{ input: { color: 'white' }, '& .MuiInputLabel-root': { color: 'gray' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'gray' } }} />}
+                  sx={{ '& .MuiSvgIcon-root': { color: 'white' } }} // Style for calendar icon
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                fullWidth
+                sx={{ padding: "0.9rem" }}
+                className="custom-button"
+                type="submit"
+              >
+                Update {/* [132] */}
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Box>
+    </Modal>
+  );
+}
+
+export default EditTaskForm;
+File: signup.jsx
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { TextField, Button, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material'; // Inferred imports
+import { register } from '../../ReduxToolkit/oSlice'; // Inferred path
+
+function SignUpForm({ togglePanel }) { // togglePanel received as prop [133]
+  const dispatch = useDispatch(); // [134]
+
+  const [formData, setFormData] = useState({ // [135]
+    fullName: "",
+    email: "",
+    password: "",
+    role: "ROLE_CUSTOMER", // Default role
+  });
+
+  const handleChange = (e) => { // [135]
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => { // [134]
+    e.preventDefault();
+    dispatch(register(formData)); // [134]
+    console.log(formData); // [136]
+  };
+
+  return (
+    <div className="space-y-3"> {/* [133] (Added space-y-3) */}
+      <h1 className="text-lg font-bold text-center text-style">Register</h1> {/* [137] */}
+      <form onSubmit={handleSubmit}> {/* [138] */}
+        <Grid container spacing={2}> {/* Inferred Grid */}
+          <Grid item xs={12}>
+            <TextField
+              label="Full Name" // [139]
+              name="fullName"
+              type="text"
+              fullWidth
+              value={formData.fullName}
+              onChange={handleChange}
+              sx={{ input: { color: 'white' }, '& .MuiInputLabel-root': { color: 'gray' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'gray' } }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Email" // [140]
+              name="email"
+              type="email"
+              fullWidth
+              value={formData.email}
+              onChange={handleChange}
+              sx={{ input: { color: 'white' }, '& .MuiInputLabel-root': { color: 'gray' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'gray' } }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Password" // [140]
+              name="password"
+              type="password"
+              fullWidth
+              value={formData.password}
+              onChange={handleChange}
+              sx={{ input: { color: 'white' }, '& .MuiInputLabel-root': { color: 'gray' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'gray' } }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth sx={{ '& .MuiInputBase-root': { color: 'white' }, '& .MuiInputLabel-root': { color: 'gray' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'gray' }, '& .MuiSvgIcon-root': { color: 'white' } }}> {/* [139] */}
+              <InputLabel id="role-select-label">Role</InputLabel> {/* [139] */}
+              <Select
+                labelId="role-select-label"
+                id="role-select"
+                value={formData.role}
+                label="Role"
+                onChange={handleChange}
+                name="role" // [141]
+              >
+                <MenuItem value="ROLE_CUSTOMER">User</MenuItem> {/* [141] */}
+                <MenuItem value="ROLE_ADMIN">Admin</MenuItem> {/* [141] */}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              fullWidth // [142]
+              sx={{ padding: "0.9rem" }}
+              className="custom-button"
+              type="submit"
+            >
+              Register {/* [137] */}
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+      <div className="flex items-center justify-center gap-2 py-5 mt-5"> {/* [133] */}
+        <span className="text-white">Already have an account?</span> {/* [133] (Added text-white) */}
+        <Button onClick={togglePanel} sx={{ color: '#c24dd0' }}>Sign in</Button> {/* [137] (Added custom color) */}
+      </div>
+    </div>
+  );
+}
+
+export default SignUpForm;
+File: signin.jsx
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { TextField, Button, Grid } from '@mui/material'; // Inferred imports
+import { login } from '../../ReduxToolkit/oSlice'; // Inferred path
+
+function SignInForm({ togglePanel }) { // togglePanel received as prop [133]
+  const dispatch = useDispatch(); // [143]
+
+  const [formData, setFormData] = useState({ // [135]
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => { // [135]
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => { // [143]
+    e.preventDefault(); // [138]
+    dispatch(login(formData)); // [143]
+    console.log(formData); // [138]
+  };
+
+  return (
+    <div className="space-y-3"> {/* [133] (Added space-y-3 for consistent spacing) */}
+      <h1 className="text-lg font-bold text-center text-style">Login</h1> {/* [138] */}
+      <form onSubmit={handleSubmit}> {/* [138] */}
+        <Grid container spacing={2}> {/* Inferred Grid */}
+          <Grid item xs={12}>
+            <TextField
+              label="Email" // [140]
+              name="email"
+              type="email"
+              fullWidth
+              value={formData.email}
+              onChange={handleChange}
+              sx={{ input: { color: 'white' }, '& .MuiInputLabel-root': { color: 'gray' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'gray' } }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Password" // [140]
+              name="password"
+              type="password"
+              fullWidth
+              value={formData.password}
+              onChange={handleChange}
+              sx={{ input: { color: 'white' }, '& .MuiInputLabel-root': { color: 'gray' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'gray' } }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              fullWidth // [142]
+              sx={{ padding: "0.9rem" }}
+              className="custom-button"
+              type="submit"
+            >
+              Login {/* [142] */}
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+      <div className="flex items-center justify-center gap-2 py-5 mt-5"> {/* [133] */}
+        <span className="text-white">Don't have an account?</span> {/* [133] (Added text-white) */}
+        <Button onClick={togglePanel} sx={{ color: '#c24dd0' }}>Sign Up</Button> {/* [133] (Added custom color) */}
+      </div>
+    </div>
+  );
+}
+
+export default SignInForm;
+File: auth.jsx
+import React, { useState } from 'react';
+import SignInForm from './SignInForm'; // Inferred path
+import SignUpForm from './SignUpForm'; // Inferred path
+import './auth.css'; // [144]
+
+function Auth() {
+  const [isRegister, setIsRegister] = useState(false); // [145]
+
+  const togglePanel = () => { // [145]
+    setIsRegister(!isRegister);
+  };
+
+  return (
+    <div className="flex justify-center h-screen items-center overflow-hidden"> {/* [146] */}
+      <div className="box"> {/* [146] */}
+        <div className={`cover ${isRegister ? 'rotate-active' : ''}`}> {/* [146], [145] */}
+          <div className="front"> {/* [147] */}
+            <img
+              src="https://images.unsplash.com/photo-1543288219-58b9f1906c29?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" // [147]
+              alt="Front Cover"
+            />
+            <div className="text"> {/* [147] */}
+              <span className="text-one"> {/* [147] */}
+                Success is built upon <br /> well organized tasks.
+              </span>
+              <span className="text-two">Let's get connected</span> {/* [148] */}
+            </div>
+          </div>
+          <div className="back"> {/* [148] */}
+            <img
+              src="https://images.unsplash.com/photo-1543288219-58b9f1906c29?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" // [149] (Same image used for front and back in the video)
+              alt="Back Cover"
+            />
+            <div className="text"> {/* Inferred, similar structure to front */}
+              <span className="text-one">
+                Start your journey <br /> with us.
+              </span>
+              <span className="text-two">Join us for a better future</span>
+            </div>
+          </div>
+        </div>
+        <div className="forms h-full"> {/* [149] */}
+          <div className="form-content"> {/* [149] */}
+            <div className="login-form"> {/* [149] */}
+              <SignInForm togglePanel={togglePanel} /> {/* [144] */}
+            </div>
+            <div className="signup-form"> {/* [149] */}
+              <SignUpForm togglePanel={togglePanel} /> {/* [144] */}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Auth;
+File: auth.css
+/* [144] */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* [150] */
+.box {
+  position: relative;
+  max-width: 430px; /* From [146] Max width for the div */
+  width: 100%;
+  background: #fff;
+  border-radius: 6px;
+  padding: 40px 30px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  perspective: 500px; /* [150] */
+  height: 70vh; /* [150] */
+  overflow: hidden; /* Added to hide overflow during rotation */
+}
+
+/* [151] */
+.box .cover {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  width: 50%;
+  z-index: 98;
+  transition: all 1s ease;
+  transform-origin: left;
+  transform-style: preserve-3d;
+}
+
+/* [151] */
+.box .cover.rotate-active {
+  transform: rotateY(-180deg); /* Adjusted for visual consistency with video */
+}
+
+/* [151] */
+.box .cover .front,
+.box .cover .back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  backface-visibility: hidden;
+}
+
+/* [135] */
+.box .cover .back {
+  transform: rotateY(180deg);
+}
+
+/* [135] */
+.box .cover img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* [135] */
+.box .cover .text {
+  position: absolute;
+  z-index: 111;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* [147] */
+.box .cover .text .text-one,
+.box .cover .text .text-two {
+  font-size: 26px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+}
+
+/* [147] */
+.box .cover .text .text-two {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* [135] */
+.box .forms {
+  height: 100%;
+  background: #fff;
+  width: 50%;
+  padding: 20px; /* Inferred padding */
+  border-radius: 0 6px 6px 0; /* Inferred border radius */
+}
+
+/* [135] */
+.box .form-content {
+  display: flex;
+  width: 200%; /* For login and signup forms side-by-side */
+  height: 100%;
+  transition: all 1s ease;
+}
+
+/* [135] */
+.box .form-content .login-form,
+.box .form-content .signup-form {
+  width: 50%; /* Each form takes 50% of 200% width, i.e., 100% of container */
+  transition: all 1s ease;
+}
+
+/* Additional style implied by the video for `text-style` */
+.text-style {
+  color: #c24dd0; /* Inferred from video design */
+}
+
+/* When rotate-active, shift forms to show signup-form */
+.box .cover.rotate-active ~ .forms .form-content {
+  transform: translateX(-50%);
+}
+File: home.jsx
+import React from 'react';
+import Sidebar from '../Sidebar/Sidebar'; // Inferred path
+import TaskList from '../Task/TaskList/TaskList'; // Inferred path
+import CreateTaskForm from '../CreateTaskForm/CreateTaskForm'; // Inferred path, for the create task modal
+import { useState } from 'react'; // Added useState for create task modal
+
+function Homepage() {
+  const [openCreateTaskForm, setOpenCreateTaskForm] = useState(false); // State for create task form
+
+  const handleOpenCreateTaskForm = () => setOpenCreateTaskForm(true);
+  const handleCloseCreateTaskForm = () => setOpenCreateTaskForm(false);
+
+  return (
+    <div className="lg:flex px-5 lg:px-20 pt-[2.9vh]"> {/* [23] */}
+      <div className="hidden lg:block w-[25vw] relative"> {/* [16] */}
+        <Sidebar handleOpenCreateTaskForm={handleOpenCreateTaskForm} /> {/* Pass handler to sidebar if it needs to trigger this */}
+      </div>
+      <div className="right-side-part w-full flex justify-center mb-10"> {/* [23], [94] */}
+        <TaskList /> {/* [94] */}
+      </div>
+      {/* Create Task Form Modal (Implicitly called from sidebar logic in the video) */}
+      <CreateTaskForm open={openCreateTaskForm} handleClose={handleCloseCreateTaskForm} />
+    </div>
+  );
+}
+
+export default Homepage;
+File: Theme/DarkTheme.jsx (Inferred file name based on usage)
+import { createTheme } from '@mui/material/styles'; // [152]
+
+export const DarkTheme = createTheme({ // [152]
+  palette: {
+    mode: 'dark', // [152]
+    background: {
+      default: '#0C071B', // [152]
+    },
+    text: {
+      primary: 'white', // [152]
+    },
+    primary: {
+      main: '#215106', // [21] (This is the primary color shown)
+      // The transcript has "255 0.507", which is not a valid hex.
+      // Assuming it meant other shades for a complete palette.
+      // The color used for the custom button and border in the video is #c24dd0.
+      // Often, a primary color in MUI also has light/dark shades and a contrast text.
+      // The speaker specifically mentions "215106" for primary.
+    },
+  },
+});
+File: index.css
+/* [89] */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* [153] */
+body {
+  /* The transcript had `1a0b1n` which is likely a typo. Using a visually similar valid hex. */
+  background-image: linear-gradient(135deg, #1a0b1a, #150D2D, #162134) !important;
+  overflow-x: hidden !important; /* [154] */
+  width: 100vw !important; /* [154] */
+  min-height: 100vh; /* Ensure body takes full height for gradient */
+}
+
+/* [155] */
+.card {
+  background-color: #0C071B; /* [155] */
+  /* Reinterpreting `RGB a 2156 25 0.507` as `rgba(2, 15, 6, 0.507)` for a valid rgba value */
+  box-shadow: rgba(2, 15, 6, 0.507) 0px 0px 20px; /* [155] */
+  padding: 1rem; /* [155] */
+  border-radius: 5px; /* [155] */
+  color: white; /* Inferred to make text visible on dark background */
+}
+
+/* [156] */
+.custom-button {
+  color: white !important; /* [156] */
+  background-image: linear-gradient(135deg, #c24dd0, #7a72fa) !important; /* Copied from navbar, [157] */
+}
+
+/* Inferred style for modal container background (used in UserList, EditTaskForm, SubmitFormModel) */
+.modal-container {
+  background-color: #0C071B;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 20px;
+}
+File: navbar.css
+/* [22] */
+.navbar-container {
+  background-image: linear-gradient(15deg, #c24dd0, #7a72fa); /* [22] */
+}
+File: sidebar.css
+/* [157] */
+.menu-item {
+  border: 2px solid #c24dd0; /* [157] */
+  color: white; /* Inferred to make text visible */
+}
+
+/* [157] */
+.active-menu-item {
+  background-image: linear-gradient(15deg, #c24dd0, #7a72fa); /* [157] (Copied from navbar.css) */
+  color: white; /* [157] */
+}
+
+/* [156] */
+.logout-button {
+  color: white !important; /* [156] */
+  background-image: linear-gradient(135deg, #c24dd0, #7a72fa) !important; /* Copied from navbar, [156] */
+}
+File: taskcard.css (Inferred file based on class usage)
+/* [117] */
+.text-tech {
+  color: #c24dd0; /* [158] */
+  border: 2px solid #c24dd0; /* [158] */
+  /* background-image: linear-gradient(15deg, #c24dd0, #7a72fa); // [158] This was later removed from the styling */
+}
+File: submissionList.jsx
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { fetchSubmissionsByTaskId } from '../../ReduxToolkit/submissionSlice'; // [159]
+import SubmissionCard from './SubmissionCard'; // [160]
+import { Modal, Box } from '@mui/material'; // Inferred for modal structure
+
+function SubmissionList({ open, handleClose }) { // Received as props from TaskCard
+  const dispatch = useDispatch(); // [161]
+  const location = useLocation(); // [159]
+  const queryParams = new URLSearchParams(location.search); // [159]
+  const taskID = queryParams.get('taskId'); // [159]
+
+  const { submissions } = useSelector((store) => store.submission); // [159], [162]
+
+  useEffect(() => { // [159]
+    if (taskID && open) { // [163] (Only call if taskID and modal is open)
+      dispatch(fetchSubmissionsByTaskId(taskID)); // [159]
+    }
+  }, [taskID, dispatch, open]); // Added open to dependency array
+
+  return (
+    <Modal open={open} onClose={handleClose}>
+      <Box className="modal-container bg-[#0C071B] p-5 rounded-md shadow-lg" sx={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 600, outline: 'none'}}> {/* Inferred Modal content styling and width */}
+        <h2 className="text-xl font-bold text-white mb-4">Task Submissions</h2> {/* Inferred title */}
+        <div className="space-y-2"> {/* [164] */}
+          {submissions.length > 0 ? ( // [165]
+            <div className="space-y-3 max-h-[70vh] overflow-y-auto"> {/* [166] (Added scroll for long lists) */}
+              {submissions.map((item) => ( // [165]
+                <SubmissionCard key={item.id} item={item} /> {/* [160] (Added key for map) */}
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-white">No submission found</p> // [165]
+          )}
+        </div>
+      </Box>
+    </Modal>
+  );
+}
+
+export default SubmissionList;
+File: submissionCard.jsx
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { OpenInNew as OpenInNewIcon } from '@mui/icons-material'; // [167]
+import { Check as CheckIcon } from '@mui/icons-material'; // [168]
+import { Close as CloseIcon } from '@mui/icons-material'; // [168]
+import { Button, IconButton } from '@mui/material'; // Inferred imports
+import { acceptDeclineSubmission } from '../../ReduxToolkit/submissionSlice'; // [169]
+
+function SubmissionCard({ item }) { // item prop
+  const dispatch = useDispatch(); // [169]
+
+  const handleAcceptDecline = (status) => { // [169]
+    dispatch(acceptDeclineSubmission({ id: item.id, status })); // [169] (status passed to action)
+  };
+
+  return (
+    <div className="rounded-md bg-black p-5 flex items-center justify-between"> {/* [160] */}
+      <div className="space-y-2 text-white"> {/* [160] (Added text-white) */}
+        <div className="flex items-center gap-2"> {/* [160] */}
+          <span className="text-[#c24dd0]">GitHub Link:</span> {/* [167] */}
+          <a
+            href={item.githubLink} // [167]
+            target="_blank" // [167]
+            rel="noopener noreferrer" // Good practice for target="_blank"
+            className="text-white hover:underline" // Inferred style
+          >
+            Go to Link <OpenInNewIcon fontSize="small" sx={{ verticalAlign: 'middle' }} /> {/* [167] (Added verticalAlign) */}
+          </a>
+        </div>
+        <div className="flex items-center gap-2 text-xs text-gray-400"> {/* [167] */}
+          <p>Submission Time: {item.submissionTime}</p> {/* [170] */}
+        </div>
+      </div>
+      <div>
+        {item.status === "PENDING" ? ( // Check current status. Assuming PENDING initially [171]
+          <div className="flex gap-2">
+            <Button
+              variant="outlined"
+              color="success" // [172]
+              onClick={() => handleAcceptDecline("ACCEPTED")} // [169] (Pass "ACCEPTED" status)
+            >
+              Accept
+            </Button>
+            <Button
+              variant="outlined"
+              color="error" // [172]
+              onClick={() => handleAcceptDecline("DECLINED")} // [169] (Pass "DECLINED" status)
+            >
+              Decline
+            </Button>
+          </div>
+        ) : (
+          <div className={`flex gap-2 items-center ${item.status === "ACCEPTED" ? "text-green-500" : "text-red-500"}`}> {/* [173] */}
+            {item.status === "ACCEPTED" ? (
+              <IconButton color="inherit"> {/* [172] */}
+                <CheckIcon />
+              </IconButton>
+            ) : (
+              <IconButton color="inherit"> {/* [168] */}
+                <CloseIcon />
+              </IconButton>
+            )}
+            <span className="text-sm">{item.status}</span> {/* [173] */}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default SubmissionCard;
+File: submitFormModel.jsx
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux'; // Inferred import
+import { useLocation } from 'react-router-dom'; // Inferred to get taskID from URL
+import { submitTask } from '../../ReduxToolkit/submissionSlice'; // [174]
+import { TextField, Button } from '@mui/material'; // Inferred imports
+import { Modal, Box } from '@mui/material'; // Inferred for modal structure
+
+function SubmitFormModel({ open, handleClose }) {
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const taskId = queryParams.get('taskId'); // [174] (Getting taskId from URL)
+
+  const [formData, setFormData] = useState({ // [175]
+    description: "",
+    githubLink: "",
+  });
+
+  const handleChange = (e) => { // Copied from createTask.jsx (inferred for simplicity)
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => { // [174]
+    e.preventDefault();
+    if (taskId && formData.githubLink) { // Ensure taskId and githubLink are present
+      dispatch(submitTask({ taskId, githubLink: formData.githubLink })); // [174]
+      console.log("Submitted task"); // [161]
+      handleClose(); // Inferred: Close modal after submission
+    } else {
+      console.error("Task ID or GitHub link missing for submission.");
+    }
+  };
+
+  return (
+    <Modal open={open} onClose={handleClose}>
+      <Box className="modal-container bg-[#0C071B] p-5 rounded-md shadow-lg" sx={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, outline: 'none'}}> {/* Inferred Modal content styling and width */}
+        <h1 className="text-2xl font-bold text-center mb-5 text-white">Submit Task</h1> {/* Inferred title styling */}
+        <form onSubmit={handleSubmit} className="space-y-3"> {/* Inferred class for spacing */}
+          <TextField
+            label="Description" // [175]
+            fullWidth
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            multiline
+            rows={4}
+            sx={{ textarea: { color: 'white' }, '& .MuiInputLabel-root': { color: 'gray' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'gray' } }}
+          />
+          <TextField
+            label="GitHub Link" // [174]
+            fullWidth
+            name="githubLink"
+            value={formData.githubLink}
+            onChange={handleChange}
+            sx={{ input: { color: 'white' }, '& .MuiInputLabel-root': { color: 'gray' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'gray' } }}
+          />
+          <Button
+            fullWidth
+            sx={{ padding: "0.9rem" }}
+            className="custom-button"
+            type="submit"
+          >
+            Submit {/* [98] */}
+          </Button>
+        </form>
+      </Box>
+    </Modal>
+  );
+}
+
+export default SubmitFormModel;

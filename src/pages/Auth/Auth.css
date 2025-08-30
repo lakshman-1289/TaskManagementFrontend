@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+.auth-wrapper {
+  display: flex;
+  justify-content: center;   /* center horizontally */
+  align-items: center;       /* center vertically */
+  min-height: 100vh;         /* full screen height */
+  background: linear-gradient(135deg, #1a0b1b, #150D2D, #162134)
+}
+
+
+.auth-box {
+  position: relative;
+  width: 900px;
+  height: 600px;
+  background: #1b1430;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  display: flex;
+  overflow: hidden;
+  transition: transform 1s ease;
+}
+
+
+.left-side, .right-side {
+  width: 50%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 40px;
+  background: #0C071B;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 2;
+  transition: transform 1s ease, opacity 2s ease;
+}
+
+.cover-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.6);
+}
+
+.cover .text {
+  position: absolute;
+  bottom: 20%;
+  left: 10%;
+  right: 10%;
+  color: #fff;
+  text-align: center;
+}
+
+.text .text-1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.text .text-2 {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+/* --- Animation Logic --- */
+.auth-box .right-side .form-container {
+  transform: translateX(100%);
+  opacity: 0;
+}
+.auth-box.active .right-side .form-container {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.auth-box .left-side .form-container {
+  transform: translateX(0);
+  opacity: 1;
+}
+.auth-box.active .left-side .form-container {
+  transform: translateX(-100%);
+  opacity: 0;
+}

@@ -1,0 +1,15 @@
+/* Task list wrapper */
+.tasklist-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+
+  margin-top: 5rem; /* push down below navbar */
+}
+
+.tasklist-inner {
+  width: 67vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}

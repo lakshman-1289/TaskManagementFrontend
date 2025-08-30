@@ -1,0 +1,12 @@
+/* Task Card Component Styles */
+
+.task-card {
+  /* You can add additional styling for the task card container here if needed */
+}
+
+.task-title {
+  font-weight: 700;
+  font-family: Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
